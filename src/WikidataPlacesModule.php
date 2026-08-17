@@ -71,21 +71,21 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         $html  = '<strong>' . e(I18N::translate('Wikidata')) . ':</strong> ';
         $html .= '<a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')';
         if ($entity?->description !== null) {
-            $html .= '<br>' . e($entity->description);
+            $html .= ' — ' . e($entity->description);
         }
         if ($entity !== null && $entity->instanceOfQids !== []) {
             $typeLabels = (new WikidataClient())->labels($entity->instanceOfQids, $language);
             $types      = array_map(static fn (string $qid): string => $typeLabels[$qid] ?? $qid, $entity->instanceOfQids);
-            $html .= '<br><strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $types));
+            $html .= '; <strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $types));
         }
         if ($entity?->commonsFileName !== null) {
             $fileUrl = 'https://commons.wikimedia.org/wiki/Special:FilePath/' . rawurlencode($entity->commonsFileName);
-            $html .= '<br><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a>';
+            $html .= '; <a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a>';
         }
         if ($entity === null) {
-            $html .= '<br><small>' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</small>';
+            $html .= ' — <small>' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</small>';
         }
-        $html .= '<br><small>' . e(I18N::translate('Source: Wikidata')) . '</small>';
+        $html .= ' <small>(' . e(I18N::translate('Source: Wikidata')) . ')</small>';
 
         return GenericViewElement::create($html);
     }
