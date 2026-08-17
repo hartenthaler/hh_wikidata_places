@@ -74,7 +74,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         if ($entity?->description !== null) {
             $html .= '<p>' . e($entity->description) . '</p>';
         }
-        if ($entity?->instanceOfQids !== []) {
+        if ($entity !== null && $entity->instanceOfQids !== []) {
             $html .= '<p><strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $entity->instanceOfQids)) . '</p>';
         }
         if ($entity?->commonsFileName !== null) {
