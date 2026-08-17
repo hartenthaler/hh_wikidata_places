@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+
+/**
+ * Read-only subset of a Wikidata entity used by the first module release.
+ */
+final class WikidataEntity
+{
+    /**
+     * @param list<string> $instanceOfQids
+     */
+    public function __construct(
+        public readonly string $qid,
+        public readonly ?string $label,
+        public readonly ?string $description,
+        public readonly array $instanceOfQids,
+        public readonly ?string $commonsFileName,
+    ) {
+    }
+
+    public function entityUrl(): string
+    {
+        return 'https://www.wikidata.org/entity/' . $this->qid;
+    }
+}

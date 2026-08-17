@@ -9,6 +9,7 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
 
 use function file_exists;
 
@@ -18,6 +19,17 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
 
     private const MODULE_NAME = 'hh_wikidata_places';
     private const GITHUB_USER = 'hartenthaler';
+    private const CACHE_SCHEMA_VERSION_PREFERENCE = 'wikidata_cache_schema_version';
+
+    public function boot(): void
+    {
+        $currentVersion = (int) $this->getPreference(self::CACHE_SCHEMA_VERSION_PREFERENCE, '0');
+        $targetVersion  = (new WikidataCacheSchema())->ensureSchema($currentVersion);
+
+        if ($targetVersion !== $currentVersion) {
+            $this->setPreference(self::CACHE_SCHEMA_VERSION_PREFERENCE, (string) $targetVersion);
+        }
+    }
 
     public function title(): string
     {
