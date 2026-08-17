@@ -68,24 +68,24 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         }
 
         $label = $entity?->label ?? $identifier->qid();
-        $html  = '<div class="wt-wikidata-places">';
-        $html .= '<strong>' . e(I18N::translate('Wikidata')) . ':</strong> ';
+        $html  = '<strong>' . e(I18N::translate('Wikidata')) . ':</strong> ';
         $html .= '<a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')';
         if ($entity?->description !== null) {
-            $html .= '<p>' . e($entity->description) . '</p>';
+            $html .= '<br>' . e($entity->description);
         }
         if ($entity !== null && $entity->instanceOfQids !== []) {
-            $html .= '<p><strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $entity->instanceOfQids)) . '</p>';
+            $typeLabels = (new WikidataClient())->labels($entity->instanceOfQids, $language);
+            $types      = array_map(static fn (string $qid): string => $typeLabels[$qid] ?? $qid, $entity->instanceOfQids);
+            $html .= '<br><strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $types));
         }
         if ($entity?->commonsFileName !== null) {
             $fileUrl = 'https://commons.wikimedia.org/wiki/Special:FilePath/' . rawurlencode($entity->commonsFileName);
-            $html .= '<p><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a></p>';
-            $html .= '<p class="small text-muted">' . e(I18N::translate('Image source and licence: Wikimedia Commons')) . '</p>';
+            $html .= '<br><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a>';
         }
         if ($entity === null) {
-            $html .= '<p class="small text-muted">' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</p>';
+            $html .= '<br><small>' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</small>';
         }
-        $html .= '<p class="small text-muted">' . e(I18N::translate('Source: Wikidata')) . '</p></div>';
+        $html .= '<br><small>' . e(I18N::translate('Source: Wikidata')) . '</small>';
 
         return GenericViewElement::create($html);
     }
