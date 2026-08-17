@@ -40,6 +40,18 @@ Semantisches Ziel für GEDCOM 7:
 
 Das Modul identifiziert Wikidata-Verknüpfungen anhand von `TYPE`, nicht allein anhand des `_EXID`-Tags. Mehrere externe Identifikatoren an einem `_LOC` müssen grundsätzlich möglich bleiben.
 
+#### Vereinbarter Kennungsvertrag
+
+Für GEDCOM 5.5.1 erkennt das Modul eine Wikidata-Kennung nur, wenn alle folgenden Bedingungen erfüllt sind:
+
+1. Das Tag `_EXID` steht direkt unterhalb des `_LOC`-Datensatzes.
+2. Sein Wert ist eine kanonische Wikidata-Item-ID: `Q` gefolgt von einer positiven Dezimalzahl.
+3. Das direkte Kind-Tag `TYPE` hat exakt den Wert `https://www.wikidata.org/entity/`.
+
+Beim Einlesen bestehender Daten darf auch eine vollständige Entity-URL akzeptiert werden; sie wird anschließend für Anzeige und Cache-Schlüssel auf die kanonische QID normalisiert. Das Modul leitet keine Wikidata-Zuordnung aus einer untypisierten `_EXID`, einer Beschriftung oder einer URL in einer Notiz ab. So bleiben andere externe Kennungen eindeutig geschützt.
+
+Im MVP wird höchstens eine passend typisierte Wikidata-QID je `_LOC` verwendet. Finden sich mehrere gültige Wikidata-Kennungen, erzeugt das Modul eine eindeutige Konfigurationswarnung und wählt nicht stillschweigend eine davon aus. Andere `_EXID`-Einträge bleiben unverändert. Bei GEDCOM 7 wechseln Wert und Authority-URI unverändert zu `EXID` / `TYPE`; die Ausleselogik bleibt deshalb unabhängig vom Namen des GEDCOM-Tags.
+
 ### 2.2 Geltungsbereich der QID
 
 Die QID bezeichnet dasselbe reale Objekt wie der `_LOC`-Datensatz. Das Modul soll nicht auf Gebäude beschränkt werden; auch Höfe, Kirchen, Friedhöfe, Straßen, Plätze, Ortsteile, Orte und andere geeignete Shared Places können mit Wikidata verknüpft werden.
