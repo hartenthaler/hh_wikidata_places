@@ -12,6 +12,14 @@ if (is_file($vestaAutoload)) {
 }
 
 require __DIR__ . '/src/MoreI18N.php';
+require __DIR__ . '/src/Domain/WikidataIdentifier.php';
+require __DIR__ . '/src/Gedcom/WikidataIdentifierLookup.php';
+require __DIR__ . '/src/Gedcom/ExternalIdService.php';
+require __DIR__ . '/src/Wikidata/WikidataEntity.php';
+require __DIR__ . '/src/Wikidata/WikidataEntityMapper.php';
+require __DIR__ . '/src/Wikidata/WikidataClient.php';
+require __DIR__ . '/src/Infrastructure/WikidataCacheSchema.php';
+require __DIR__ . '/src/Infrastructure/WikidataCacheRepository.php';
 require __DIR__ . '/src/WikidataPlacesModule.php';
 
 return new WikidataPlacesModule();
