@@ -14,7 +14,6 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCac
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
-use Vesta\Hook\HookInterfaces\PrintFunctionsPlaceInterface;
 use Vesta\Model\GenericViewElement;
 use Vesta\Model\GovReference;
 use Vesta\Model\LocReference;
@@ -23,7 +22,7 @@ use Vesta\Model\PlaceStructure;
 
 use function file_exists;
 
-class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterface, PrintFunctionsPlaceInterface
+class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterface
 {
     use ModuleCustomTrait;
 
