@@ -6,6 +6,7 @@ namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
 
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
@@ -13,9 +14,11 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCac
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
-use Vesta\Hook\HookInterfaces\EmptyPrintFunctionsPlace;
 use Vesta\Hook\HookInterfaces\PrintFunctionsPlaceInterface;
 use Vesta\Model\GenericViewElement;
+use Vesta\Model\GovReference;
+use Vesta\Model\LocReference;
+use Vesta\Model\MapCoordinates;
 use Vesta\Model\PlaceStructure;
 
 use function file_exists;
@@ -23,7 +26,6 @@ use function file_exists;
 class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterface, PrintFunctionsPlaceInterface
 {
     use ModuleCustomTrait;
-    use EmptyPrintFunctionsPlace;
 
     private const MODULE_NAME = 'hh_wikidata_places';
     private const GITHUB_USER = 'hartenthaler';
@@ -84,6 +86,21 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         $html .= '<p class="small text-muted">' . e(I18N::translate('Source: Wikidata')) . '</p></section>';
 
         return GenericViewElement::create($html);
+    }
+
+    public function gov2html(GovReference $gov, Tree $tree): ?GenericViewElement
+    {
+        return null;
+    }
+
+    public function map2html(MapCoordinates $map): ?GenericViewElement
+    {
+        return null;
+    }
+
+    public function loc2linkIcon(LocReference $loc): ?string
+    {
+        return null;
     }
 
     public function title(): string
