@@ -35,6 +35,10 @@ final class WikidataClient
             $response = $this->httpClient->request('GET', self::ENDPOINT, [
                 'allow_redirects' => false,
                 'connect_timeout' => 3.0,
+                'headers'         => [
+                    'Accept'     => 'application/json',
+                    'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)',
+                ],
                 'http_errors'     => false,
                 'query'           => [
                     'action'        => 'wbgetentities',

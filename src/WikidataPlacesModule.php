@@ -68,9 +68,9 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         }
 
         $label = $entity?->label ?? $identifier->qid();
-        $html  = '<section class="wt-wikidata-places mt-3">';
-        $html .= '<h3>' . e(I18N::translate('Wikidata')) . '</h3>';
-        $html .= '<p><a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')</p>';
+        $html  = '<div class="wt-wikidata-places">';
+        $html .= '<strong>' . e(I18N::translate('Wikidata')) . ':</strong> ';
+        $html .= '<a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')';
         if ($entity?->description !== null) {
             $html .= '<p>' . e($entity->description) . '</p>';
         }
@@ -82,7 +82,10 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
             $html .= '<p><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a></p>';
             $html .= '<p class="small text-muted">' . e(I18N::translate('Image source and licence: Wikimedia Commons')) . '</p>';
         }
-        $html .= '<p class="small text-muted">' . e(I18N::translate('Source: Wikidata')) . '</p></section>';
+        if ($entity === null) {
+            $html .= '<p class="small text-muted">' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</p>';
+        }
+        $html .= '<p class="small text-muted">' . e(I18N::translate('Source: Wikidata')) . '</p></div>';
 
         return GenericViewElement::create($html);
     }
