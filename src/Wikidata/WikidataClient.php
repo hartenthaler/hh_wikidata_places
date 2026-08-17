@@ -71,7 +71,12 @@ final class WikidataClient
     private function language(string $language): string
     {
         $language = str_replace('_', '-', trim($language));
+        if (preg_match('/^([a-z]{2,3})(?:-[A-Za-z]{2,4})?$/', $language, $matches) !== 1) {
+            return 'en';
+        }
 
-        return preg_match('/^[a-z]{2,3}(?:-[A-Za-z]{2,4})?$/', $language) === 1 ? $language : 'en';
+        // Wikidata labels use language codes such as "de" rather than webtrees'
+        // regional UI tags such as "de-DE".
+        return $matches[1];
     }
 }

@@ -6,10 +6,19 @@ namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
 
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
+use Vesta\Model\GenericViewElement;
+use Vesta\Model\GovReference;
+use Vesta\Model\LocReference;
+use Vesta\Model\MapCoordinates;
+use Vesta\Model\PlaceStructure;
 
 use function file_exists;
 
@@ -29,6 +38,68 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         if ($targetVersion !== $currentVersion) {
             $this->setPreference(self::CACHE_SCHEMA_VERSION_PREFERENCE, (string) $targetVersion);
         }
+    }
+
+    public function plac2html(PlaceStructure $place): ?GenericViewElement
+    {
+        $location = $place->getLocation();
+        if ($location === null) {
+            return null;
+        }
+
+        $lookup = (new ExternalIdService())->wikidataIdentifiers($location->gedcom());
+        if ($lookup->isAmbiguous()) {
+            return GenericViewElement::create('<div class="alert alert-warning">' . e(I18N::translate('Several Wikidata identifiers are configured for this shared place.')) . '</div>');
+        }
+
+        $identifier = $lookup->identifier();
+        if ($identifier === null) {
+            return null;
+        }
+
+        $language = explode('-', str_replace('_', '-', I18N::languageTag()))[0] ?: 'en';
+        $cache    = new WikidataCacheRepository();
+        $entity   = $cache->find($identifier, $language);
+        if ($entity === null) {
+            $entity = (new WikidataClient())->fetch($identifier, $language);
+            if ($entity !== null) {
+                $cache->store($entity, $language);
+            }
+        }
+
+        $label = $entity?->label ?? $identifier->qid();
+        $html  = '<section class="wt-wikidata-places mt-3">';
+        $html .= '<h3>' . e(I18N::translate('Wikidata')) . '</h3>';
+        $html .= '<p><a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')</p>';
+        if ($entity?->description !== null) {
+            $html .= '<p>' . e($entity->description) . '</p>';
+        }
+        if ($entity?->instanceOfQids !== []) {
+            $html .= '<p><strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $entity->instanceOfQids)) . '</p>';
+        }
+        if ($entity?->commonsFileName !== null) {
+            $fileUrl = 'https://commons.wikimedia.org/wiki/Special:FilePath/' . rawurlencode($entity->commonsFileName);
+            $html .= '<p><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a></p>';
+            $html .= '<p class="small text-muted">' . e(I18N::translate('Image source and licence: Wikimedia Commons')) . '</p>';
+        }
+        $html .= '<p class="small text-muted">' . e(I18N::translate('Source: Wikidata')) . '</p></section>';
+
+        return GenericViewElement::create($html);
+    }
+
+    public function gov2html(GovReference $gov, Tree $tree): ?GenericViewElement
+    {
+        return null;
+    }
+
+    public function map2html(MapCoordinates $map): ?GenericViewElement
+    {
+        return null;
+    }
+
+    public function loc2linkIcon(LocReference $loc): ?string
+    {
+        return null;
     }
 
     public function title(): string
