@@ -58,8 +58,23 @@ msgstr ""
 msgid "Wikidata details are currently unavailable."
 msgstr ""
 
+msgid "Wikidata item identifiers and the requested display language."
+msgstr ""
+
+msgid "Wikidata responses are cached locally to reduce external requests."
+msgstr ""
+
 msgid "Wikidata Places"
 msgstr ""
 
 msgid "Wikidata redirects this item to"
+msgstr ""
+
+msgid "The module retrieves public place information from Wikidata. Editors can also search Wikidata to assign an item to a shared place."
+msgstr ""
+
+msgid "The server IP address and technical request metadata."
+msgstr ""
+
+msgid "Search text entered by an editor."
 msgstr ""

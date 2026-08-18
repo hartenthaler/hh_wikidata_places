@@ -24,11 +24,30 @@ final class WikidataExternalIdEditor
         $lines = preg_split('/\R/u', rtrim($gedcom)) ?: [];
         $kept  = [];
         for ($i = 0, $count = count($lines); $i < $count; ++$i) {
-            if (preg_match('/^1 (?:_EXID|EXID) (.+)$/', $lines[$i], $match) === 1 && WikidataIdentifier::tryFrom($match[1]) !== null && isset($lines[$i + 1]) && preg_match('/^2 TYPE https:\/\/www\.wikidata\.org\/entity\/$/', $lines[$i + 1]) === 1) {
-                ++$i;
+            if (preg_match('/^1 (?:_EXID|EXID) (.+)$/', $lines[$i], $match) !== 1) {
+                $kept[] = $lines[$i];
                 continue;
             }
-            $kept[] = $lines[$i];
+
+            $block = [$lines[$i]];
+            while ($i + 1 < $count && preg_match('/^1 /', $lines[$i + 1]) !== 1) {
+                $block[] = $lines[++$i];
+            }
+
+            $identifier = WikidataIdentifier::tryFrom($match[1]);
+            $authority  = null;
+            foreach ($block as $line) {
+                if (preg_match('/^2 TYPE (.+)$/', $line, $type) === 1) {
+                    $authority = $type[1];
+                    break;
+                }
+            }
+
+            if ($identifier !== null && $authority !== null && $identifier->isDeclaredBy($authority)) {
+                continue;
+            }
+
+            array_push($kept, ...$block);
         }
 
         if ($replacement !== null) {

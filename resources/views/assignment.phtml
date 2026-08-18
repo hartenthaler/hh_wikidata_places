@@ -9,13 +9,14 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 /** @var Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier|null $current */
 /** @var Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataEntity|null $entity */
 /** @var Fisharebest\Webtrees\Location $location */
+/** @var string $location_name */
 /** @var string $search */
 /** @var string $search_url */
 ?>
 
 <p>
     <?= MoreI18N::translate('Choose the Wikidata item that describes this shared place.') ?>
-    <a href="<?= e($location->url()) ?>"><?= e($location->fullName()) ?></a>
+    <a href="<?= e($location->url()) ?>"><?= e($location_name) ?></a>
 </p>
 
 <?php if ($current !== null) : ?>

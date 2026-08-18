@@ -50,6 +50,7 @@ Nearby discovery, Domus deep links and extended house-history metadata follow in
 When a Wikidata entry is loaded, the server requests only the public Wikidata QID and the requested display language. Standard technical request metadata is sent by the server. The module never sends names of living people, family relationships, private notes, sources or other genealogical data.
 
 Responses are cached locally. If Wikidata is temporarily unavailable, the normal Vesta Shared Place page remains available.
+When the optional Legal Notice module is active, it includes Wikidata in the generated privacy policy together with the purpose of the request and the transferred technical data.
 
 ## 📌 Requirements
 

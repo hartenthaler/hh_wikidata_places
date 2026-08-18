@@ -106,7 +106,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         $html .= '<br><small>' . e(MoreI18N::translate('Source')) . ': Wikidata</small>';
 
         if ($location->canEdit()) {
-            $html .= '<br><a href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>';
+            $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>';
         }
 
         return GenericViewElement::create($html);
@@ -135,6 +135,47 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
     public function description(): string
     {
         return MoreI18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
+    }
+
+    /**
+     * Privacy information consumed opportunistically by hh_legal_notice.
+     *
+     * There is intentionally no interface dependency: Wikidata Places must
+     * also load on installations that do not use the Legal Notice module.
+     *
+     * @return array{
+     *     third_party_services:list<array{
+     *         service_id:string,
+     *         name:string,
+     *         url:string,
+     *         country:string,
+     *         privacy_url:string,
+     *         description:string,
+     *         data:list<string>
+     *     }>,
+     *     security_measures:list<string>
+     * }
+     */
+    public function privacyNotices(): array
+    {
+        return [
+            'third_party_services' => [[
+                'service_id'  => 'wikimedia-foundation',
+                'name'        => 'Wikimedia Foundation (Wikidata)',
+                'url'         => 'https://www.wikidata.org/',
+                'country'     => 'United States',
+                'privacy_url' => 'https://foundation.wikimedia.org/wiki/Policy:Privacy_policy',
+                'description' => MoreI18N::translate('The module retrieves public place information from Wikidata. Editors can also search Wikidata to assign an item to a shared place.'),
+                'data'        => [
+                    MoreI18N::translate('Wikidata item identifiers and the requested display language.'),
+                    MoreI18N::translate('Search text entered by an editor.'),
+                    MoreI18N::translate('The server IP address and technical request metadata.'),
+                ],
+            ]],
+            'security_measures' => [
+                MoreI18N::translate('Wikidata responses are cached locally to reduce external requests.'),
+            ],
+        ];
     }
 
     public function customModuleAuthorName(): string
