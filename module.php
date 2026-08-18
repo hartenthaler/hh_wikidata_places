@@ -14,6 +14,8 @@ if (is_file($vestaAutoload)) {
 
 require __DIR__ . '/src/MoreI18N.php';
 require __DIR__ . '/src/Domain/WikidataIdentifier.php';
+require __DIR__ . '/src/Domus/DomusLinkProvider.php';
+require __DIR__ . '/src/Domus/DomusMapLinkProvider.php';
 require __DIR__ . '/src/Gedcom/WikidataIdentifierLookup.php';
 require __DIR__ . '/src/Gedcom/ExternalIdService.php';
 require __DIR__ . '/src/Gedcom/WikidataExternalIdEditor.php';

@@ -47,6 +47,21 @@ msgstr "Die Treffer im Umkreis von %s km sind nach Namensähnlichkeit und Entfer
 msgid "Search nearby"
 msgstr "In der Nähe suchen"
 
+msgid "Show in Domus"
+msgstr "In Domus anzeigen"
+
+msgid "Item"
+msgstr "Element"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Distance"
+msgstr "Entfernung"
+
+msgid "Actions"
+msgstr "Aktionen"
+
 msgid "Choose how far the editor-only nearby search may look around a shared place."
 msgstr "Legen Sie fest, wie weit die Suche in der Nähe eines gemeinsamen Ortes reichen darf."
 
