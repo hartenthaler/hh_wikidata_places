@@ -6,6 +6,8 @@ namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure;
 
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataEntity;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\HistoricAddress;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\HistoricPersonRelation;
 use Illuminate\Database\Capsule\Manager as DB;
 use JsonException;
 
@@ -37,9 +39,38 @@ final class WikidataCacheRepository
         }
 
         $qid = $payload['qid'] ?? null;
-        if (!is_string($qid) || $qid !== $identifier->qid()) {
+        if (!is_string($qid) || $qid !== $identifier->qid() || !is_array($payload['historic_addresses'] ?? null) || !is_array($payload['owners'] ?? null) || !is_array($payload['occupants'] ?? null)) {
             return null;
         }
+
+        $addresses = [];
+        foreach ($payload['historic_addresses'] as $address) {
+            if (!is_array($address)) { continue; }
+            $addresses[] = new HistoricAddress(
+                is_string($address['street_qid'] ?? null) ? $address['street_qid'] : null,
+                is_string($address['street_text'] ?? null) ? $address['street_text'] : null,
+                is_string($address['house_number'] ?? null) ? $address['house_number'] : null,
+                is_string($address['postal_code'] ?? null) ? $address['postal_code'] : null,
+                is_string($address['locality_qid'] ?? null) ? $address['locality_qid'] : null,
+                is_string($address['from'] ?? null) ? $address['from'] : null,
+                is_string($address['until'] ?? null) ? $address['until'] : null,
+            );
+        }
+
+        $relations = static function (array $items): array {
+            $result = [];
+            foreach ($items as $item) {
+                if (!is_array($item) || !is_string($item['qid'] ?? null)) {
+                    continue;
+                }
+                $result[] = new HistoricPersonRelation(
+                    $item['qid'],
+                    is_string($item['from'] ?? null) ? $item['from'] : null,
+                    is_string($item['until'] ?? null) ? $item['until'] : null,
+                );
+            }
+            return $result;
+        };
 
         return new WikidataEntity(
             $qid,
@@ -47,6 +78,9 @@ final class WikidataCacheRepository
             is_string($payload['description'] ?? null) ? $payload['description'] : null,
             array_values(array_filter($payload['instance_of'] ?? [], 'is_string')),
             is_string($payload['commons_file_name'] ?? null) ? $payload['commons_file_name'] : null,
+            $addresses,
+            $relations($payload['owners']),
+            $relations($payload['occupants']),
         );
     }
 
@@ -59,6 +93,17 @@ final class WikidataCacheRepository
             'description'       => $entity->description,
             'instance_of'       => $entity->instanceOfQids,
             'commons_file_name' => $entity->commonsFileName,
+            'historic_addresses' => array_map(static fn (HistoricAddress $address): array => [
+                'street_qid' => $address->streetQid, 'street_text' => $address->streetText,
+                'house_number' => $address->houseNumber, 'postal_code' => $address->postalCode,
+                'locality_qid' => $address->localityQid, 'from' => $address->from, 'until' => $address->until,
+            ], $entity->historicAddresses),
+            'owners' => array_map(static fn (HistoricPersonRelation $relation): array => [
+                'qid' => $relation->qid, 'from' => $relation->from, 'until' => $relation->until,
+            ], $entity->owners),
+            'occupants' => array_map(static fn (HistoricPersonRelation $relation): array => [
+                'qid' => $relation->qid, 'from' => $relation->from, 'until' => $relation->until,
+            ], $entity->occupants),
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         DB::table(WikidataCacheSchema::TABLE)->updateOrInsert(

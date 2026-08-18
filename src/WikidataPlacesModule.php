@@ -6,6 +6,7 @@ namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
 
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Date;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
@@ -72,7 +73,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
 
         $lookup = (new ExternalIdService())->wikidataIdentifiers($location->gedcom());
         if ($lookup->isAmbiguous()) {
-            return GenericViewElement::create('<div class="alert alert-warning">' . e(MoreI18N::translate('Several Wikidata identifiers are configured for this shared place.')) . '</div>');
+            return GenericViewElement::create('<div class="alert alert-warning">' . e(I18N::translate('Several Wikidata identifiers are configured for this shared place.')) . '</div>');
         }
 
         $identifier = $lookup->identifier();
@@ -84,9 +85,9 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
             }
 
             return GenericViewElement::create(
-                '<br><br><strong>' . e(MoreI18N::translate('Wikidata')) . ':</strong><br>'
-                . '<a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>'
-                . '<a class="btn btn-primary btn-sm mt-2 ms-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(MoreI18N::translate('Show in Domus')) . '</a>'
+                '<br><br><strong>' . e(I18N::translate('Wikidata')) . ':</strong><br>'
+                . '<a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(I18N::translate('Assign Wikidata item')) . '</a>'
+                . '<a class="btn btn-primary btn-sm mt-2 ms-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Show in Domus')) . '</a>'
             );
         }
 
@@ -101,7 +102,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         }
 
         $label = $entity?->label ?? $identifier->qid();
-        $html  = '<br><br><strong>' . e(MoreI18N::translate('Wikidata')) . ':</strong> ';
+        $html  = '<br><br><strong>' . e(I18N::translate('Wikidata')) . ':</strong> ';
         $html .= '<a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')';
         if ($entity?->description !== null) {
             $html .= ' — ' . e($entity->description);
@@ -109,23 +110,91 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         if ($entity !== null && $entity->instanceOfQids !== []) {
             $typeLabels = (new WikidataClient())->labels($entity->instanceOfQids, $language);
             $types      = array_map(static fn (string $qid): string => $typeLabels[$qid] ?? $qid, $entity->instanceOfQids);
-            $html .= '<br>' . e(I18N::translate('Type')) . ': ' . e(implode(', ', $types));
+            $html .= '<br>' . e(MoreI18N::xlate('Type')) . ': ' . e(implode(', ', $types));
+        }
+        if ($entity !== null && $entity->historicAddresses !== []) {
+            $addressQids = [];
+            foreach ($entity->historicAddresses as $address) {
+                foreach ([$address->streetQid, $address->localityQid] as $qid) {
+                    if ($qid !== null) { $addressQids[] = $qid; }
+                }
+            }
+            $addressLabels = (new WikidataClient())->labels($addressQids, $language);
+            $html .= '<h4 class="mt-3">' . e(MoreI18N::xlate('Addresses')) . '</h4><div class="table-responsive"><table class="table table-sm"><thead><tr>'
+                . '<th>' . e(I18N::translate('House number')) . '</th><th>' . e(I18N::translate('Street')) . '</th><th>' . e(MoreI18N::xlate('Postal code')) . '</th><th>' . e(MoreI18N::xlate('Place')) . '</th><th>' . e(MoreI18N::xlate('From')) . '</th><th>' . e(I18N::translate('Until')) . '</th></tr></thead><tbody>';
+            foreach ($entity->historicAddresses as $address) {
+                $street = $address->streetText ?? ($address->streetQid === null ? '' : ($addressLabels[$address->streetQid] ?? $address->streetQid));
+                $placeName = $address->localityQid === null ? '' : ($addressLabels[$address->localityQid] ?? $address->localityQid);
+                $html .= '<tr><td>' . e($address->houseNumber ?? '') . '</td><td>' . e($street) . '</td><td>' . e($address->postalCode ?? '') . '</td><td>' . e($placeName) . '</td><td>' . e($address->from ?? '') . '</td><td>' . e($address->until ?? '') . '</td></tr>';
+            }
+            $html .= '</tbody></table></div>';
+        }
+        if ($entity !== null && ($entity->owners !== [] || $entity->occupants !== [])) {
+            $people = (new WikidataClient())->people(
+                array_merge(
+                    array_map(static fn ($relation): string => $relation->qid, $entity->owners),
+                    array_map(static fn ($relation): string => $relation->qid, $entity->occupants),
+                ),
+                $language,
+            );
+            $html .= $this->personRelationsHtml(MoreI18N::xlate('Owner'), $entity->owners, $people);
+            $html .= $this->personRelationsHtml(I18N::translate('Occupants'), $entity->occupants, $people);
         }
         if ($entity?->commonsFileName !== null) {
             $fileUrl = 'https://commons.wikimedia.org/wiki/Special:FilePath/' . rawurlencode($entity->commonsFileName);
-            $html .= '<br><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(MoreI18N::translate('Image on Wikimedia Commons')) . '</a>';
+            $html .= '<br><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a>';
         }
         if ($entity === null) {
-            $html .= ' — <small>' . e(MoreI18N::translate('Wikidata details are currently unavailable.')) . '</small>';
+            $html .= ' — <small>' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</small>';
         }
-        $html .= '<br><small>' . e(MoreI18N::translate('Source')) . ': Wikidata</small>';
-        $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(MoreI18N::translate('Show in Domus')) . '</a>';
+        $html .= '<br><small>' . e(MoreI18N::xlate('Source')) . ': Wikidata</small>';
+        $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Show in Domus')) . '</a>';
 
         if ($location->canEdit()) {
-            $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>';
+            $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(I18N::translate('Assign Wikidata item')) . '</a>';
         }
 
         return GenericViewElement::create($html);
+    }
+
+    /** @param list<object{qid:string,from:?string,until:?string}> $relations @param array<string,object{qid:string,label:?string,birthDate:?string,deathDate:?string}> $people */
+    private function personRelationsHtml(string $heading, array $relations, array $people): string
+    {
+        if ($relations === []) {
+            return '';
+        }
+
+        $html = '<h4 class="mt-3">' . e($heading) . '</h4><div class="table-responsive"><table class="table table-sm"><thead><tr>'
+            . '<th>' . e(MoreI18N::xlate('Name')) . '</th>'
+            . '<th>' . e(MoreI18N::xlate('Birth')) . '</th><th>' . e(MoreI18N::xlate('Death')) . '</th>'
+            . '<th>' . e(MoreI18N::xlate('From')) . '</th><th>' . e(I18N::translate('Until')) . '</th></tr></thead><tbody>';
+        foreach ($relations as $relation) {
+            $person = $people[$relation->qid] ?? null;
+            $label = $person?->label ?? $relation->qid;
+            $html .= '<tr><td><a href="https://www.wikidata.org/entity/' . e($relation->qid) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> <small>(' . e($relation->qid) . ')</small></td>'
+                . '<td>' . $this->displayWikidataDate($person?->birthDate) . '</td><td>' . $this->displayWikidataDate($person?->deathDate) . '</td>'
+                . '<td>' . $this->displayWikidataDate($relation->from) . '</td><td>' . $this->displayWikidataDate($relation->until) . '</td></tr>';
+        }
+
+        return $html . '</tbody></table></div>';
+    }
+
+    private function displayWikidataDate(?string $date): string
+    {
+        if ($date === null || preg_match('/^(\\d{4,})(?:-(\\d{2})(?:-(\\d{2}))?)?$/', $date, $parts) !== 1) {
+            return '';
+        }
+
+        $gedcom = $parts[1];
+        if (isset($parts[2])) {
+            $months = ['01' => 'JAN', '02' => 'FEB', '03' => 'MAR', '04' => 'APR', '05' => 'MAY', '06' => 'JUN', '07' => 'JUL', '08' => 'AUG', '09' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+            $gedcom = $months[$parts[2]] . ' ' . $parts[1];
+            if (isset($parts[3])) {
+                $gedcom = ltrim($parts[3], '0') . ' ' . $gedcom;
+            }
+        }
+
+        return (new Date($gedcom))->display();
     }
 
     public function gov2html(GovReference $gov, Tree $tree): ?GenericViewElement
@@ -145,12 +214,12 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
 
     public function title(): string
     {
-        return MoreI18N::translate('Wikidata Places');
+        return I18N::translate('Wikidata Places');
     }
 
     public function description(): string
     {
-        return MoreI18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
+        return I18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
     }
 
     public function getAdminAction(): ResponseInterface
@@ -172,7 +241,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
             $tree->setPreference(NearbyDiscoverySettings::PREFERENCE, (string) NearbyDiscoverySettings::normalise($radius));
         }
 
-        FlashMessages::addMessage(MoreI18N::translate('Nearby search settings have been updated.'), 'success');
+        FlashMessages::addMessage(I18N::translate('Nearby search settings have been updated.'), 'success');
 
         return redirect($this->getConfigLink());
     }
@@ -205,16 +274,16 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
                 'url'         => 'https://www.wikidata.org/',
                 'country'     => 'United States',
                 'privacy_url' => 'https://foundation.wikimedia.org/wiki/Policy:Privacy_policy',
-                'description' => MoreI18N::translate('The module retrieves public place information from Wikidata. Editors can also search Wikidata to assign an item to a shared place.'),
+                'description' => I18N::translate('The module retrieves public place information from Wikidata. Editors can also search Wikidata to assign an item to a shared place.'),
                 'data'        => [
-                    MoreI18N::translate('Wikidata item identifiers and the requested display language.'),
-                    MoreI18N::translate('Search text entered by an editor.'),
-                    MoreI18N::translate('Coordinates and the configured radius for an editor-requested nearby search.'),
-                    MoreI18N::translate('The server IP address and technical request metadata.'),
+                    I18N::translate('Wikidata item identifiers and the requested display language.'),
+                    I18N::translate('Search text entered by an editor.'),
+                    I18N::translate('Coordinates and the configured radius for an editor-requested nearby search.'),
+                    I18N::translate('The server IP address and technical request metadata.'),
                 ],
             ]],
             'security_measures' => [
-                MoreI18N::translate('Wikidata responses are cached locally to reduce external requests.'),
+                I18N::translate('Wikidata responses are cached locally to reduce external requests.'),
             ],
         ];
     }

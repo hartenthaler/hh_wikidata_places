@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 
 /** @var string $assignment_url */
@@ -21,29 +22,29 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 ?>
 
 <p>
-    <?= MoreI18N::translate('Choose the Wikidata item that describes this shared place.') ?>
+    <?= I18N::translate('Choose the Wikidata item that describes this shared place.') ?>
     <a href="<?= e($location->url()) ?>"><?= e($location_name) ?></a>
 </p>
 
 <?php if ($current !== null) : ?>
     <div class="alert alert-info">
-        <?= MoreI18N::translate('Current Wikidata item') ?>:
+        <?= I18N::translate('Current Wikidata item') ?>:
         <a href="<?= e($entity?->qid === null ? $current->entityUrl() : 'https://www.wikidata.org/entity/' . $entity->qid) ?>" rel="noopener noreferrer" target="_blank"><?= e($entity?->label ?? $current->qid()) ?></a>
         (<?= e($current->qid()) ?>)
         <?php if ($entity !== null && $entity->qid !== $current->qid()) : ?>
             <br>
-            <?= MoreI18N::translate('Wikidata redirects this item to') ?>: <?= e($entity->qid) ?>
+            <?= I18N::translate('Wikidata redirects this item to') ?>: <?= e($entity->qid) ?>
             <form method="post" action="<?= e($assignment_url) ?>" class="d-inline">
                 <?= csrf_field() ?>
                 <input type="hidden" name="operation" value="assign">
                 <input type="hidden" name="qid" value="<?= e($entity->qid) ?>">
-                <button class="btn btn-sm btn-primary" type="submit"><?= MoreI18N::translate('Replace with the redirected Wikidata item') ?></button>
+                <button class="btn btn-sm btn-primary" type="submit"><?= I18N::translate('Replace with the redirected Wikidata item') ?></button>
             </form>
         <?php endif ?>
         <form method="post" action="<?= e($assignment_url) ?>" class="d-inline">
             <?= csrf_field() ?>
             <input type="hidden" name="operation" value="remove">
-            <button class="btn btn-sm btn-outline-danger" type="submit"><?= MoreI18N::translate('Remove Wikidata item') ?></button>
+            <button class="btn btn-sm btn-outline-danger" type="submit"><?= I18N::translate('Remove Wikidata item') ?></button>
         </form>
     </div>
 <?php endif ?>
@@ -53,47 +54,47 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
         <input type="hidden" name="route" value="<?= e($route_parameter) ?>">
     <?php endif ?>
     <div class="col-sm-8">
-        <label class="visually-hidden" for="wikidata-search"><?= MoreI18N::translate('Search Wikidata') ?></label>
-        <input class="form-control" id="wikidata-search" maxlength="120" minlength="2" name="search" required type="search" value="<?= e($search) ?>" placeholder="<?= e(MoreI18N::translate('Search Wikidata')) ?>">
+        <label class="visually-hidden" for="wikidata-search"><?= I18N::translate('Search Wikidata') ?></label>
+        <input class="form-control" id="wikidata-search" maxlength="120" minlength="2" name="search" required type="search" value="<?= e($search) ?>" placeholder="<?= e(I18N::translate('Search Wikidata')) ?>">
     </div>
     <div class="col-sm-4 d-flex gap-2">
-        <button class="btn btn-outline-secondary" type="submit"><?= MoreI18N::translate('Search') ?></button>
+        <button class="btn btn-outline-secondary" type="submit"><?= MoreI18N::xlate('Search') ?></button>
         <?php if ($coordinates !== null) : ?>
-            <button class="btn btn-primary" formnovalidate name="nearby" type="submit" value="1"><?= MoreI18N::translate('Search nearby') ?></button>
+            <button class="btn btn-primary" formnovalidate name="nearby" type="submit" value="1"><?= I18N::translate('Search nearby') ?></button>
         <?php endif ?>
     </div>
 </form>
 
 <?php if ($nearby_requested && $nearby_candidates === []) : ?>
-    <div class="alert alert-secondary"><?= MoreI18N::translate('No nearby Wikidata items were found.') ?></div>
+    <div class="alert alert-secondary"><?= I18N::translate('No nearby Wikidata items were found.') ?></div>
 <?php endif ?>
 
 <?php if ($nearby_candidates !== []) : ?>
-    <h2><?= MoreI18N::translate('Nearby Wikidata items') ?></h2>
-    <p class="text-muted"><?= MoreI18N::translate('Candidates within %s km are sorted by name similarity and distance.', number_format($nearby_radius_km, 1)) ?></p>
+    <h2><?= I18N::translate('Nearby Wikidata items') ?></h2>
+    <p class="text-muted"><?= I18N::translate('Candidates within %s km are sorted by name similarity and distance.', number_format($nearby_radius_km, 1)) ?></p>
     <div class="table-responsive"><table class="table table-sm table-hover align-middle">
-        <thead><tr><th><?= MoreI18N::translate('Item') ?></th><th><?= MoreI18N::translate('Description') ?></th><th class="text-nowrap"><?= MoreI18N::translate('Distance') ?></th><th><span class="visually-hidden"><?= MoreI18N::translate('Actions') ?></span></th></tr></thead>
+        <thead><tr><th><?= I18N::translate('Item') ?></th><th><?= MoreI18N::xlate('Description') ?></th><th class="text-nowrap"><?= I18N::translate('Distance') ?></th><th><span class="visually-hidden"><?= I18N::translate('Actions') ?></span></th></tr></thead>
         <tbody><?php foreach ($nearby_candidates as $candidate) : ?>
             <?php $isCurrent = $current !== null && $candidate->qid === $current->qid() ?>
             <tr<?= $isCurrent ? ' class="table-success"' : '' ?>><td><strong><?= e($candidate->label) ?></strong><br><small class="text-muted"><?= e($candidate->qid) ?></small></td><td><?= e($candidate->description ?? '') ?></td><td class="text-nowrap"><?= e(number_format($candidate->distanceKm, 1)) ?> km</td><td class="text-nowrap">
-                <a class="btn btn-sm btn-outline-secondary" href="<?= e($candidate->entityUrl()) ?>" rel="noopener noreferrer" target="_blank" title="<?= e(MoreI18N::translate('Open in Wikidata')) ?>"><?= view('icons/link') ?><span class="visually-hidden"><?= MoreI18N::translate('Open in Wikidata') ?></span></a>
-                <form action="<?= e($assignment_url) ?>" class="d-inline" method="post"><?= csrf_field() ?><input name="operation" type="hidden" value="assign"><input name="qid" type="hidden" value="<?= e($candidate->qid) ?>"><button class="btn btn-sm btn-outline-primary" type="submit"><?= MoreI18N::translate('Assign') ?></button></form>
+                <a class="btn btn-sm btn-outline-secondary" href="<?= e($candidate->entityUrl()) ?>" rel="noopener noreferrer" target="_blank" title="<?= e(I18N::translate('Open in Wikidata')) ?>"><?= view('icons/link') ?><span class="visually-hidden"><?= I18N::translate('Open in Wikidata') ?></span></a>
+                <form action="<?= e($assignment_url) ?>" class="d-inline" method="post"><?= csrf_field() ?><input name="operation" type="hidden" value="assign"><input name="qid" type="hidden" value="<?= e($candidate->qid) ?>"><button class="btn btn-sm btn-outline-primary" type="submit"><?= I18N::translate('Assign') ?></button></form>
             </td></tr>
         <?php endforeach ?></tbody>
     </table></div>
 <?php endif ?>
 
 <?php if ($has_search && $candidates === []) : ?>
-    <div class="alert alert-secondary"><?= MoreI18N::translate('No Wikidata items were found.') ?></div>
+    <div class="alert alert-secondary"><?= I18N::translate('No Wikidata items were found.') ?></div>
 <?php endif ?>
 
 <?php if ($candidates !== []) : ?><div class="table-responsive"><table class="table table-sm table-hover align-middle">
-    <thead><tr><th><?= MoreI18N::translate('Item') ?></th><th><?= MoreI18N::translate('Description') ?></th><th><span class="visually-hidden"><?= MoreI18N::translate('Actions') ?></span></th></tr></thead>
+    <thead><tr><th><?= I18N::translate('Item') ?></th><th><?= MoreI18N::xlate('Description') ?></th><th><span class="visually-hidden"><?= I18N::translate('Actions') ?></span></th></tr></thead>
     <tbody><?php foreach ($candidates as $candidate) : ?>
         <?php $isCurrent = $current !== null && $candidate->qid === $current->qid() ?>
         <tr<?= $isCurrent ? ' class="table-success"' : '' ?>><td><strong><?= e($candidate->label) ?></strong><br><small class="text-muted"><?= e($candidate->qid) ?></small></td><td><?= e($candidate->description ?? '') ?></td><td class="text-nowrap">
-            <a class="btn btn-sm btn-outline-secondary" href="<?= e($candidate->entityUrl()) ?>" rel="noopener noreferrer" target="_blank" title="<?= e(MoreI18N::translate('Open in Wikidata')) ?>"><?= view('icons/link') ?><span class="visually-hidden"><?= MoreI18N::translate('Open in Wikidata') ?></span></a>
-            <form method="post" action="<?= e($assignment_url) ?>" class="d-inline"><?= csrf_field() ?><input type="hidden" name="operation" value="assign"><input type="hidden" name="qid" value="<?= e($candidate->qid) ?>"><button class="btn btn-sm btn-primary" type="submit"><?= MoreI18N::translate('Assign') ?></button></form>
+            <a class="btn btn-sm btn-outline-secondary" href="<?= e($candidate->entityUrl()) ?>" rel="noopener noreferrer" target="_blank" title="<?= e(I18N::translate('Open in Wikidata')) ?>"><?= view('icons/link') ?><span class="visually-hidden"><?= I18N::translate('Open in Wikidata') ?></span></a>
+            <form method="post" action="<?= e($assignment_url) ?>" class="d-inline"><?= csrf_field() ?><input type="hidden" name="operation" value="assign"><input type="hidden" name="qid" value="<?= e($candidate->qid) ?>"><button class="btn btn-sm btn-primary" type="submit"><?= I18N::translate('Assign') ?></button></form>
         </td></tr>
     <?php endforeach ?></tbody>
 </table></div><?php endif ?>

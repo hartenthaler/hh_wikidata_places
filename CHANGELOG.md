@@ -2,7 +2,11 @@
 
 All notable user-facing changes are documented here.
 
-## 0.1.0 - unreleased
+## Next release
+
+- Version 2 will add optional research workflows without automatic GEDCOM changes.
+
+## 2.2.6.0 - 2026-08-19
 
 ### Added
 
@@ -21,7 +25,5 @@ All notable user-facing changes are documented here.
 - A configurable nearby-search radius for each family tree (default: 5 km).
 - A direct, read-only **Show in Domus** link.  Linked Wikidata items open their Domus map entry; other shared places open the Domus map start page.
 - More compact, accessible tables for normal and nearby Wikidata search results, with an icon link to the public Wikidata item.
-
-### Planned next
-
-- Extended house-history metadata.
+- Read-only historical address tables when Wikidata provides structured or free-text address statements, including optional validity dates.
+- Public Wikidata owners and occupants with external links, known life dates, and historical relationship dates.

@@ -1,125 +1,192 @@
+# Wikidata Places
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Wikidata Places\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-19 00:59+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:2,1c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: .git\n"
 
-msgid "Image on Wikimedia Commons"
-msgstr ""
-
-msgid "Assign"
-msgstr ""
-
-msgid "Assign Wikidata item"
-msgstr ""
-
-msgid "Choose the Wikidata item that describes this shared place."
-msgstr ""
-
-msgid "Current Wikidata item"
-msgstr ""
-
-msgid "Invalid Wikidata assignment operation."
-msgstr ""
-
-msgid "Invalid Wikidata identifier."
-msgstr ""
-
-msgid "Links shared places to Wikidata and exposes read-only Wikidata data and Domus links."
-msgstr ""
-
-msgid "Several Wikidata identifiers are configured for this shared place."
-msgstr ""
-
-msgid "No Wikidata items were found."
-msgstr ""
-
-msgid "No nearby Wikidata items were found."
-msgstr ""
-
-msgid "Nearby Wikidata items"
-msgstr ""
-
-msgid "Candidates within %s km are sorted by name similarity and distance."
-msgstr ""
-
-msgid "Search nearby"
-msgstr ""
-
-msgid "Show in Domus"
-msgstr ""
-
-msgid "Item"
-msgstr ""
-
-msgid "Description"
-msgstr ""
-
-msgid "Distance"
-msgstr ""
-
-msgid "Actions"
-msgstr ""
-
-msgid "Choose how far the editor-only nearby search may look around a shared place."
-msgstr ""
-
-msgid "Nearby-search radius (km)"
-msgstr ""
-
-msgid "Nearby search settings have been updated."
-msgstr ""
-
-msgid "Coordinates and the configured radius for an editor-requested nearby search."
-msgstr ""
-
-msgid "Open in Wikidata"
-msgstr ""
-
-msgid "Remove Wikidata item"
-msgstr ""
-
-msgid "Replace with the redirected Wikidata item"
-msgstr ""
-
-msgid "Search"
-msgstr ""
-
-msgid "Search Wikidata"
-msgstr ""
-
-msgid "Source"
-msgstr ""
-
-msgid "Wikidata"
-msgstr ""
-
-msgid "Wikidata details are currently unavailable."
-msgstr ""
-
-msgid "Wikidata item identifiers and the requested display language."
-msgstr ""
-
-msgid "Wikidata responses are cached locally to reduce external requests."
-msgstr ""
-
-msgid "Wikidata Places"
-msgstr ""
-
-msgid "Wikidata redirects this item to"
-msgstr ""
-
-msgid "The module retrieves public place information from Wikidata. Editors can also search Wikidata to assign an item to a shared place."
-msgstr ""
-
-msgid "The server IP address and technical request metadata."
-msgstr ""
-
-msgid "The Wikidata item has been assigned."
-msgstr ""
-
+#: src/Http/WikidataLocationAssignmentAction.php:37
 msgid "The Wikidata item has been removed."
 msgstr ""
 
+#: src/Http/WikidataLocationAssignmentAction.php:43
+msgid "Invalid Wikidata identifier."
+msgstr ""
+
+#: src/Http/WikidataLocationAssignmentAction.php:47
+msgid "The Wikidata item has been assigned."
+msgstr ""
+
+#: src/Http/WikidataLocationAssignmentAction.php:49
+msgid "Invalid Wikidata assignment operation."
+msgstr ""
+
+#: src/Http/WikidataLocationAssignmentPage.php:70
+#: src/WikidataPlacesModule.php:89 src/WikidataPlacesModule.php:154
+msgid "Assign Wikidata item"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:76
+msgid "Several Wikidata identifiers are configured for this shared place."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:88 src/WikidataPlacesModule.php:105
+msgid "Wikidata"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:90 src/WikidataPlacesModule.php:151
+msgid "Show in Domus"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:124
+msgid "House number"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:124
+msgid "Street"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:124 src/WikidataPlacesModule.php:170
+msgid "Until"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:141
+msgid "Occupants"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:145
+msgid "Image on Wikimedia Commons"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:148
+msgid "Wikidata details are currently unavailable."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:217
+msgid "Wikidata Places"
+msgstr ""
+
+#: src/WikidataPlacesModule.php:222
+msgid ""
+"Links shared places to Wikidata and exposes read-only Wikidata data and "
+"Domus links."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:244
+msgid "Nearby search settings have been updated."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:277
+msgid ""
+"The module retrieves public place information from Wikidata. Editors can "
+"also search Wikidata to assign an item to a shared place."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:279
+msgid "Wikidata item identifiers and the requested display language."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:280
 msgid "Search text entered by an editor."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:281
+msgid ""
+"Coordinates and the configured radius for an editor-requested nearby search."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:282
+msgid "The server IP address and technical request metadata."
+msgstr ""
+
+#: src/WikidataPlacesModule.php:286
+msgid "Wikidata responses are cached locally to reduce external requests."
+msgstr ""
+
+#: resources/views/assignment.phtml:25
+msgid "Choose the Wikidata item that describes this shared place."
+msgstr ""
+
+#: resources/views/assignment.phtml:31
+msgid "Current Wikidata item"
+msgstr ""
+
+#: resources/views/assignment.phtml:36
+msgid "Wikidata redirects this item to"
+msgstr ""
+
+#: resources/views/assignment.phtml:41
+msgid "Replace with the redirected Wikidata item"
+msgstr ""
+
+#: resources/views/assignment.phtml:47
+msgid "Remove Wikidata item"
+msgstr ""
+
+#: resources/views/assignment.phtml:57 resources/views/assignment.phtml:58
+msgid "Search Wikidata"
+msgstr ""
+
+#: resources/views/assignment.phtml:63
+msgid "Search nearby"
+msgstr ""
+
+#: resources/views/assignment.phtml:69
+msgid "No nearby Wikidata items were found."
+msgstr ""
+
+#: resources/views/assignment.phtml:73
+msgid "Nearby Wikidata items"
+msgstr ""
+
+#: resources/views/assignment.phtml:74
+#, php-format
+msgid "Candidates within %s km are sorted by name similarity and distance."
+msgstr ""
+
+#: resources/views/assignment.phtml:76 resources/views/assignment.phtml:92
+msgid "Item"
+msgstr ""
+
+#: resources/views/assignment.phtml:76
+msgid "Distance"
+msgstr ""
+
+#: resources/views/assignment.phtml:76 resources/views/assignment.phtml:92
+msgid "Actions"
+msgstr ""
+
+#: resources/views/assignment.phtml:80 resources/views/assignment.phtml:96
+msgid "Open in Wikidata"
+msgstr ""
+
+#: resources/views/assignment.phtml:81 resources/views/assignment.phtml:97
+msgid "Assign"
+msgstr ""
+
+#: resources/views/assignment.phtml:88
+msgid "No Wikidata items were found."
+msgstr ""
+
+#: resources/views/configuration.phtml:21
+msgid ""
+"Choose how far the editor-only nearby search may look around a shared place."
+msgstr ""
+
+#: resources/views/configuration.phtml:27
+msgid "Nearby-search radius (km)"
 msgstr ""

@@ -1,126 +1,215 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Wikidata Places\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-19 00:53+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
+"Language-Team: \n"
 "Language: de\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.9\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:2,1c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: .git\n"
 
-msgid "Image on Wikimedia Commons"
-msgstr "Bild auf Wikimedia Commons"
-
-msgid "Assign"
-msgstr "Zuordnen"
-
-msgid "Assign Wikidata item"
-msgstr "Wikidata-Element zuordnen"
-
-msgid "Choose the Wikidata item that describes this shared place."
-msgstr "Wählen Sie das Wikidata-Element aus, das diesen gemeinsamen Ort beschreibt."
-
-msgid "Current Wikidata item"
-msgstr "Aktuelles Wikidata-Element"
-
-msgid "Invalid Wikidata assignment operation."
-msgstr "Ungültige Wikidata-Zuordnungsoperation."
-
-msgid "Invalid Wikidata identifier."
-msgstr "Ungültige Wikidata-Kennung."
-
-msgid "Links shared places to Wikidata and exposes read-only Wikidata data and Domus links."
-msgstr "Verknüpft gemeinsame Orte mit Wikidata und zeigt schreibgeschützte Wikidata-Daten und Domus-Links an."
-
-msgid "Several Wikidata identifiers are configured for this shared place."
-msgstr "Für diesen gemeinsamen Ort sind mehrere Wikidata-Kennungen konfiguriert."
-
-msgid "No Wikidata items were found."
-msgstr "Es wurden keine Wikidata-Elemente gefunden."
-
-msgid "No nearby Wikidata items were found."
-msgstr "Es wurden keine Wikidata-Elemente in der Nähe gefunden."
-
-msgid "Nearby Wikidata items"
-msgstr "Wikidata-Elemente in der Nähe"
-
-msgid "Candidates within %s km are sorted by name similarity and distance."
-msgstr "Die Treffer im Umkreis von %s km sind nach Namensähnlichkeit und Entfernung sortiert."
-
-msgid "Search nearby"
-msgstr "In der Nähe suchen"
-
-msgid "Show in Domus"
-msgstr "In Domus anzeigen"
-
-msgid "Item"
-msgstr "Element"
-
-msgid "Description"
-msgstr "Beschreibung"
-
-msgid "Distance"
-msgstr "Entfernung"
-
-msgid "Actions"
-msgstr "Aktionen"
-
-msgid "Choose how far the editor-only nearby search may look around a shared place."
-msgstr "Legen Sie fest, wie weit die Suche in der Nähe eines gemeinsamen Ortes reichen darf."
-
-msgid "Nearby-search radius (km)"
-msgstr "Suchradius in der Nähe (km)"
-
-msgid "Nearby search settings have been updated."
-msgstr "Die Einstellungen für die Suche in der Nähe wurden aktualisiert."
-
-msgid "Coordinates and the configured radius for an editor-requested nearby search."
-msgstr "Koordinaten und der eingestellte Radius für eine von Bearbeitenden ausgelöste Suche in der Nähe."
-
-msgid "Open in Wikidata"
-msgstr "In Wikidata öffnen"
-
-msgid "Remove Wikidata item"
-msgstr "Wikidata-Element entfernen"
-
-msgid "Replace with the redirected Wikidata item"
-msgstr "Durch das weitergeleitete Wikidata-Element ersetzen"
-
-msgid "Search"
-msgstr "Suchen"
-
-msgid "Search Wikidata"
-msgstr "Wikidata durchsuchen"
-
-msgid "Source"
-msgstr "Quelle"
-
-msgid "Wikidata"
-msgstr "Wikidata"
-
-msgid "Wikidata details are currently unavailable."
-msgstr "Wikidata-Details sind derzeit nicht verfügbar."
-
-msgid "Wikidata item identifiers and the requested display language."
-msgstr "Wikidata-Elementkennungen und die angeforderte Anzeigesprache."
-
-msgid "Wikidata responses are cached locally to reduce external requests."
-msgstr "Wikidata-Antworten werden lokal zwischengespeichert, um externe Anfragen zu reduzieren."
-
-msgid "Wikidata Places"
-msgstr "Wikidata-Orte"
-
-msgid "Wikidata redirects this item to"
-msgstr "Wikidata leitet dieses Element weiter zu"
-
-msgid "The module retrieves public place information from Wikidata. Editors can also search Wikidata to assign an item to a shared place."
-msgstr "Das Modul ruft öffentliche Ortsinformationen von Wikidata ab. Bearbeitende können Wikidata außerdem durchsuchen, um einem gemeinsamen Ort ein Element zuzuordnen."
-
-msgid "The server IP address and technical request metadata."
-msgstr "Die IP-Adresse des Servers und technische Anfragemetadaten."
-
-msgid "The Wikidata item has been assigned."
-msgstr "Das Wikidata-Element wurde zugeordnet."
-
+#: src/Http/WikidataLocationAssignmentAction.php:37
 msgid "The Wikidata item has been removed."
 msgstr "Das Wikidata-Element wurde entfernt."
 
+#: src/Http/WikidataLocationAssignmentAction.php:43
+msgid "Invalid Wikidata identifier."
+msgstr "Ungültige Wikidata-Kennung."
+
+#: src/Http/WikidataLocationAssignmentAction.php:47
+msgid "The Wikidata item has been assigned."
+msgstr "Das Wikidata-Element wurde zugeordnet."
+
+#: src/Http/WikidataLocationAssignmentAction.php:49
+msgid "Invalid Wikidata assignment operation."
+msgstr "Ungültige Wikidata-Zuordnungsoperation."
+
+#: src/Http/WikidataLocationAssignmentPage.php:70
+#: src/WikidataPlacesModule.php:89 src/WikidataPlacesModule.php:154
+msgid "Assign Wikidata item"
+msgstr "Wikidata-Element zuordnen"
+
+#: src/WikidataPlacesModule.php:76
+msgid "Several Wikidata identifiers are configured for this shared place."
+msgstr ""
+"Für diesen gemeinsamen Ort sind mehrere Wikidata-Kennungen konfiguriert."
+
+#: src/WikidataPlacesModule.php:88 src/WikidataPlacesModule.php:105
+msgid "Wikidata"
+msgstr "Wikidata"
+
+#: src/WikidataPlacesModule.php:90 src/WikidataPlacesModule.php:151
+msgid "Show in Domus"
+msgstr "In Domus anzeigen"
+
+#: src/WikidataPlacesModule.php:124
+msgid "House number"
+msgstr "Hausnummer"
+
+#: src/WikidataPlacesModule.php:124
+msgid "Street"
+msgstr "Straße"
+
+#: src/WikidataPlacesModule.php:124 src/WikidataPlacesModule.php:170
+msgid "Until"
+msgstr "Bis"
+
+#: src/WikidataPlacesModule.php:141
+msgid "Occupants"
+msgstr "Bewohner"
+
+#: src/WikidataPlacesModule.php:145
+msgid "Image on Wikimedia Commons"
+msgstr "Bild auf Wikimedia Commons"
+
+#: src/WikidataPlacesModule.php:148
+msgid "Wikidata details are currently unavailable."
+msgstr "Wikidata-Details sind derzeit nicht verfügbar."
+
+#: src/WikidataPlacesModule.php:217
+msgid "Wikidata Places"
+msgstr "Wikidata-Orte"
+
+#: src/WikidataPlacesModule.php:222
+msgid ""
+"Links shared places to Wikidata and exposes read-only Wikidata data and "
+"Domus links."
+msgstr ""
+"Verknüpft gemeinsame Orte mit Wikidata und zeigt schreibgeschützte Wikidata-"
+"Daten und Domus-Links an."
+
+#: src/WikidataPlacesModule.php:244
+msgid "Nearby search settings have been updated."
+msgstr "Die Einstellungen für die Suche in der Nähe wurden aktualisiert."
+
+#: src/WikidataPlacesModule.php:277
+msgid ""
+"The module retrieves public place information from Wikidata. Editors can "
+"also search Wikidata to assign an item to a shared place."
+msgstr ""
+"Das Modul ruft öffentliche Ortsinformationen von Wikidata ab. Bearbeitende "
+"können Wikidata außerdem durchsuchen, um einem gemeinsamen Ort ein Element "
+"zuzuordnen."
+
+#: src/WikidataPlacesModule.php:279
+msgid "Wikidata item identifiers and the requested display language."
+msgstr "Wikidata-Elementkennungen und die angeforderte Anzeigesprache."
+
+#: src/WikidataPlacesModule.php:280
 msgid "Search text entered by an editor."
 msgstr "Von einer bearbeitenden Person eingegebener Suchtext."
+
+#: src/WikidataPlacesModule.php:281
+msgid ""
+"Coordinates and the configured radius for an editor-requested nearby search."
+msgstr ""
+"Koordinaten und der eingestellte Radius für eine von Bearbeitenden "
+"ausgelöste Suche in der Nähe."
+
+#: src/WikidataPlacesModule.php:282
+msgid "The server IP address and technical request metadata."
+msgstr "Die IP-Adresse des Servers und technische Anfragemetadaten."
+
+#: src/WikidataPlacesModule.php:286
+msgid "Wikidata responses are cached locally to reduce external requests."
+msgstr ""
+"Wikidata-Antworten werden lokal zwischengespeichert, um externe Anfragen zu "
+"reduzieren."
+
+#: resources/views/assignment.phtml:25
+msgid "Choose the Wikidata item that describes this shared place."
+msgstr ""
+"Wählen Sie das Wikidata-Element aus, das diesen gemeinsamen Ort beschreibt."
+
+#: resources/views/assignment.phtml:31
+msgid "Current Wikidata item"
+msgstr "Aktuelles Wikidata-Element"
+
+#: resources/views/assignment.phtml:36
+msgid "Wikidata redirects this item to"
+msgstr "Wikidata leitet dieses Element weiter zu"
+
+#: resources/views/assignment.phtml:41
+msgid "Replace with the redirected Wikidata item"
+msgstr "Durch das weitergeleitete Wikidata-Element ersetzen"
+
+#: resources/views/assignment.phtml:47
+msgid "Remove Wikidata item"
+msgstr "Wikidata-Element entfernen"
+
+#: resources/views/assignment.phtml:57 resources/views/assignment.phtml:58
+msgid "Search Wikidata"
+msgstr "Wikidata durchsuchen"
+
+#: resources/views/assignment.phtml:63
+msgid "Search nearby"
+msgstr "In der Nähe suchen"
+
+#: resources/views/assignment.phtml:69
+msgid "No nearby Wikidata items were found."
+msgstr "Es wurden keine Wikidata-Elemente in der Nähe gefunden."
+
+#: resources/views/assignment.phtml:73
+msgid "Nearby Wikidata items"
+msgstr "Wikidata-Elemente in der Nähe"
+
+#: resources/views/assignment.phtml:74
+#, php-format
+msgid "Candidates within %s km are sorted by name similarity and distance."
+msgstr ""
+"Die Treffer im Umkreis von %s km sind nach Namensähnlichkeit und Entfernung "
+"sortiert."
+
+#: resources/views/assignment.phtml:76 resources/views/assignment.phtml:92
+msgid "Item"
+msgstr "Element"
+
+#: resources/views/assignment.phtml:76
+msgid "Distance"
+msgstr "Entfernung"
+
+#: resources/views/assignment.phtml:76 resources/views/assignment.phtml:92
+msgid "Actions"
+msgstr "Aktionen"
+
+#: resources/views/assignment.phtml:80 resources/views/assignment.phtml:96
+msgid "Open in Wikidata"
+msgstr "In Wikidata öffnen"
+
+#: resources/views/assignment.phtml:81 resources/views/assignment.phtml:97
+msgid "Assign"
+msgstr "Zuordnen"
+
+#: resources/views/assignment.phtml:88
+msgid "No Wikidata items were found."
+msgstr "Es wurden keine Wikidata-Elemente gefunden."
+
+#: resources/views/configuration.phtml:21
+msgid ""
+"Choose how far the editor-only nearby search may look around a shared place."
+msgstr ""
+"Legen Sie fest, wie weit die Suche in der Nähe eines gemeinsamen Ortes "
+"reichen darf."
+
+#: resources/views/configuration.phtml:27
+msgid "Nearby-search radius (km)"
+msgstr "Suchradius in der Nähe (km)"
+
+#~ msgid "Addresses"
+#~ msgstr "Adressen"
+
+#~ msgid "Search"
+#~ msgstr "Suchen"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"

@@ -114,6 +114,59 @@ final class WikidataClient
         return $labels;
     }
 
+    /**
+     * Resolve a bounded set of externally published person/organisation facts.
+     * No result is associated with a local webtrees individual.
+     *
+     * @param list<string> $qids
+     * @return array<string, WikidataPerson>
+     */
+    public function people(array $qids, string $language): array
+    {
+        $qids = array_values(array_unique(array_filter($qids, static fn (string $qid): bool => preg_match('/^Q[1-9][0-9]*$/', $qid) === 1)));
+        if ($qids === []) {
+            return [];
+        }
+
+        $language = $this->language($language);
+        $people = [];
+        foreach (array_chunk(array_slice($qids, 0, 20), 10) as $chunk) {
+            try {
+                $response = $this->httpClient->request('GET', self::ENDPOINT, [
+                    'allow_redirects' => false,
+                    'connect_timeout' => 3.0,
+                    'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                    'http_errors'     => false,
+                    'query'           => ['action' => 'wbgetentities', 'format' => 'json', 'formatversion' => '2', 'ids' => implode('|', $chunk), 'languages' => $language . '|en', 'props' => 'labels|claims'],
+                    'timeout'         => 6.0,
+                ]);
+                $body = $response->getBody()->getContents();
+                if ($response->getStatusCode() !== 200 || strlen($body) > self::MAX_RESPONSE_BYTES) {
+                    continue;
+                }
+                $payload = json_decode($body, true, 16, JSON_THROW_ON_ERROR);
+            } catch (GuzzleException|JsonException) {
+                continue;
+            }
+
+            foreach ($payload['entities'] ?? [] as $qid => $entity) {
+                if (!is_string($qid) || !is_array($entity)) {
+                    continue;
+                }
+                $label = $entity['labels'][$language]['value'] ?? $entity['labels']['en']['value'] ?? null;
+                $claims = is_array($entity['claims'] ?? null) ? $entity['claims'] : [];
+                $people[$qid] = new WikidataPerson(
+                    $qid,
+                    is_string($label) ? $label : null,
+                    $this->claimDate($claims['P569'] ?? []),
+                    $this->claimDate($claims['P570'] ?? []),
+                );
+            }
+        }
+
+        return $people;
+    }
+
     /** @return list<WikidataSearchResult> */
     public function search(string $term, string $language): array
     {
@@ -242,6 +295,24 @@ final class WikidataClient
         // Wikidata labels use language codes such as "de" rather than webtrees'
         // regional UI tags such as "de-DE".
         return $matches[1];
+    }
+
+    /** @param mixed $statements */
+    private function claimDate(mixed $statements): ?string
+    {
+        foreach (is_array($statements) ? $statements : [] as $statement) {
+            $time = $statement['mainsnak']['datavalue']['value']['time'] ?? null;
+            $precision = $statement['mainsnak']['datavalue']['value']['precision'] ?? null;
+            if (!is_string($time) || !is_int($precision) || preg_match('/^[+-](\\d{4,})-(\\d{2})-(\\d{2})T/', $time, $date) !== 1) {
+                continue;
+            }
+            return match (true) {
+                $precision >= 11 => $date[1] . '-' . $date[2] . '-' . $date[3],
+                $precision >= 10 => $date[1] . '-' . $date[2],
+                default => $date[1],
+            };
+        }
+        return null;
     }
 
     /**

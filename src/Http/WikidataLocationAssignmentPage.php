@@ -67,7 +67,7 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
             'search'         => $search,
             'search_url'     => $searchUrl,
             'route_parameter' => is_string($routeParameter) ? $routeParameter : null,
-            'title'          => MoreI18N::translate('Assign Wikidata item'),
+            'title'          => I18N::translate('Assign Wikidata item'),
             'tree'           => $tree,
         ]);
     }
