@@ -76,5 +76,11 @@ msgstr ""
 msgid "The server IP address and technical request metadata."
 msgstr ""
 
+msgid "The Wikidata item has been assigned."
+msgstr ""
+
+msgid "The Wikidata item has been removed."
+msgstr ""
+
 msgid "Search text entered by an editor."
 msgstr ""

@@ -12,6 +12,7 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 /** @var string $location_name */
 /** @var string $search */
 /** @var string $search_url */
+/** @var string|null $route_parameter */
 ?>
 
 <p>
@@ -43,6 +44,9 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 <?php endif ?>
 
 <form method="get" action="<?= e($search_url) ?>" class="row g-2 mb-4">
+    <?php if ($route_parameter !== null) : ?>
+        <input type="hidden" name="route" value="<?= e($route_parameter) ?>">
+    <?php endif ?>
     <div class="col-sm-8">
         <label class="visually-hidden" for="wikidata-search"><?= MoreI18N::translate('Search Wikidata') ?></label>
         <input class="form-control" id="wikidata-search" maxlength="120" minlength="2" name="search" required type="search" value="<?= e($search) ?>" placeholder="<?= e(MoreI18N::translate('Search Wikidata')) ?>">
@@ -57,7 +61,8 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 <?php endif ?>
 
 <?php foreach ($candidates as $candidate) : ?>
-    <div class="card mb-2">
+    <?php $isCurrent = $current !== null && $candidate->qid === $current->qid() ?>
+    <div class="card mb-2<?= $isCurrent ? ' border-success bg-light' : '' ?>">
         <div class="card-body">
             <strong><?= e($candidate->label) ?></strong> <span class="text-muted">(<?= e($candidate->qid) ?>)</span>
             <?php if ($candidate->description !== null) : ?>

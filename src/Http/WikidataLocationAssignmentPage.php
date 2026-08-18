@@ -16,7 +16,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-use function http_build_query;
 use function parse_str;
 use function route;
 
@@ -27,6 +26,10 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        if ($request->getMethod() === 'POST') {
+            return (new WikidataLocationAssignmentAction())->handle($request);
+        }
+
         $tree     = Validator::attributes($request)->tree();
         $xref     = Validator::attributes($request)->isXref()->string('xref');
         $location = Auth::checkLocationAccess(Registry::locationFactory()->make($xref, $tree), true);
@@ -38,14 +41,14 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
         $client          = new WikidataClient();
         $query           = [];
         parse_str($request->getUri()->getQuery(), $query);
-        unset($query['search']);
-        $searchUrl = (string) $request->getUri()->withQuery(http_build_query($query, '', '&', PHP_QUERY_RFC3986));
+        $routeParameter = $query['route'] ?? null;
+        $searchUrl      = (string) $request->getUri()->withQuery('');
 
         $current = (new ExternalIdService())->wikidataIdentifiers($location->gedcom())->identifier();
         $entity  = $current === null ? null : $client->fetch($current, $language);
 
         return $this->viewResponse('hh_wikidata_places::assignment', [
-            'assignment_url' => route('hh-wikidata-places.assignment', ['tree' => $tree->name(), 'xref' => $location->xref()]),
+            'assignment_url' => route('hh-wikidata-places.assignment-page', ['tree' => $tree->name(), 'xref' => $location->xref()]),
             'candidates'     => $submittedSearch === '' ? [] : $client->search($submittedSearch, $language),
             'current'        => $current,
             'entity'         => $entity,
@@ -53,6 +56,7 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
             'location_name'  => $locationName,
             'search'         => $search,
             'search_url'     => $searchUrl,
+            'route_parameter' => is_string($routeParameter) ? $routeParameter : null,
             'title'          => MoreI18N::translate('Assign Wikidata item'),
             'tree'           => $tree,
         ]);

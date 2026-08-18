@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http;
 
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Http\Exceptions\HttpBadRequestException;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
@@ -32,6 +33,7 @@ final class WikidataLocationAssignmentAction implements RequestHandlerInterface
 
         if ($operation === 'remove') {
             $service->remove($location);
+            FlashMessages::addMessage(MoreI18N::translate('The Wikidata item has been removed.'), 'success');
         } elseif ($operation === 'assign') {
             $qid        = Validator::parsedBody($request)->string('qid', '');
             $identifier = WikidataIdentifier::tryFrom($qid);
@@ -41,6 +43,7 @@ final class WikidataLocationAssignmentAction implements RequestHandlerInterface
             }
 
             $service->assign($location, $identifier);
+            FlashMessages::addMessage(MoreI18N::translate('The Wikidata item has been assigned.'), 'success');
         } else {
             throw new HttpBadRequestException(MoreI18N::translate('Invalid Wikidata assignment operation.'));
         }

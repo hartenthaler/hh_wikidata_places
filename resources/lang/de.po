@@ -77,5 +77,11 @@ msgstr "Das Modul ruft öffentliche Ortsinformationen von Wikidata ab. Bearbeite
 msgid "The server IP address and technical request metadata."
 msgstr "Die IP-Adresse des Servers und technische Anfragemetadaten."
 
+msgid "The Wikidata item has been assigned."
+msgstr "Das Wikidata-Element wurde zugeordnet."
+
+msgid "The Wikidata item has been removed."
+msgstr "Das Wikidata-Element wurde entfernt."
+
 msgid "Search text entered by an editor."
 msgstr "Von einer bearbeitenden Person eingegebener Suchtext."

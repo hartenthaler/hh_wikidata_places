@@ -12,6 +12,8 @@ All notable user-facing changes are documented here.
 - Public-source and image-attribution information.
 - A protected search page where editors can review and assign a Wikidata item to a shared place.
 - Explicit controls to remove an assigned Wikidata item.
+- A visible assignment button even when a shared place has no Wikidata item yet.
+- Updates to the shared-place change record when its Wikidata assignment changes.
 - Detection of Wikidata redirects and merged items, with an editor-controlled replacement action.
 - German translations for the displayed information and assignment interface.
 - Automatic disclosure of Wikidata access to the optional Legal Notice module.

@@ -15,7 +15,6 @@ use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentAction;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentPage;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
 use Vesta\Model\GenericViewElement;
@@ -50,12 +49,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
             'hh-wikidata-places.assignment-page',
             '/tree/{tree}/wikidata-place/{xref}/assignment',
             WikidataLocationAssignmentPage::class,
-        );
-        $router->post(
-            'hh-wikidata-places.assignment',
-            '/tree/{tree}/wikidata-place/{xref}/assignment',
-            WikidataLocationAssignmentAction::class,
-        );
+        )->allows(['GET', 'POST']);
     }
 
     public function plac2html(PlaceStructure $place): ?GenericViewElement
@@ -72,7 +66,14 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
 
         $identifier = $lookup->identifier();
         if ($identifier === null) {
-            return null;
+            if (!$location->canEdit()) {
+                return null;
+            }
+
+            return GenericViewElement::create(
+                '<br><br><strong>' . e(MoreI18N::translate('Wikidata')) . ':</strong><br>'
+                . '<a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>'
+            );
         }
 
         $language = explode('-', str_replace('_', '-', I18N::languageTag()))[0] ?: 'en';

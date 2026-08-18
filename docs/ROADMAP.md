@@ -3,8 +3,8 @@
 ## 0.1 – Foundation / Read-only
 Goal: establish the external identifier model and robust read-only Wikidata enrichment.
 
-## 0.2 – Assignment
-Goal: allow users with edit rights to find and assign Wikidata items to Vesta `_LOC` records.
+## 0.2 – Assignment ✅
+Completed: editors can search Wikidata from a Vesta `_LOC` record, review candidates, assign, replace, or remove a typed Wikidata identifier. The workflow works with and without Pretty URLs, preserves unrelated external identifiers, and updates the shared place’s change record.
 
 ## 0.3 – Nearby Discovery
 Goal: improve candidate discovery using coordinates, distance and basic ranking.
