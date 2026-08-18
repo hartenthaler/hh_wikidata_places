@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Wikidata Places\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Image on Wikimedia Commons"
+msgstr ""
+
+msgid "Assign"
+msgstr ""
+
+msgid "Assign Wikidata item"
+msgstr ""
+
+msgid "Choose the Wikidata item that describes this shared place."
+msgstr ""
+
+msgid "Current Wikidata item"
+msgstr ""
+
+msgid "Invalid Wikidata assignment operation."
+msgstr ""
+
+msgid "Invalid Wikidata identifier."
+msgstr ""
+
+msgid "Links shared places to Wikidata and exposes read-only Wikidata data and Domus links."
+msgstr ""
+
+msgid "Several Wikidata identifiers are configured for this shared place."
+msgstr ""
+
+msgid "No Wikidata items were found."
+msgstr ""
+
+msgid "Open in Wikidata"
+msgstr ""
+
+msgid "Remove Wikidata item"
+msgstr ""
+
+msgid "Replace with the redirected Wikidata item"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search Wikidata"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Wikidata"
+msgstr ""
+
+msgid "Wikidata details are currently unavailable."
+msgstr ""
+
+msgid "Wikidata Places"
+msgstr ""
+
+msgid "Wikidata redirects this item to"
+msgstr ""

@@ -6,13 +6,17 @@ namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
 
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentAction;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentPage;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
 use Vesta\Model\GenericViewElement;
 use Vesta\Model\GovReference;
@@ -21,6 +25,7 @@ use Vesta\Model\MapCoordinates;
 use Vesta\Model\PlaceStructure;
 
 use function file_exists;
+use function route;
 
 class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterface
 {
@@ -38,6 +43,19 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         if ($targetVersion !== $currentVersion) {
             $this->setPreference(self::CACHE_SCHEMA_VERSION_PREFERENCE, (string) $targetVersion);
         }
+
+        View::registerNamespace(self::MODULE_NAME, $this->resourcesFolder() . 'views/');
+        $router = Registry::routeFactory()->routeMap();
+        $router->get(
+            'hh-wikidata-places.assignment-page',
+            '/tree/{tree}/wikidata-place/{xref}/assignment',
+            WikidataLocationAssignmentPage::class,
+        );
+        $router->post(
+            'hh-wikidata-places.assignment',
+            '/tree/{tree}/wikidata-place/{xref}/assignment',
+            WikidataLocationAssignmentAction::class,
+        );
     }
 
     public function plac2html(PlaceStructure $place): ?GenericViewElement
@@ -49,7 +67,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
 
         $lookup = (new ExternalIdService())->wikidataIdentifiers($location->gedcom());
         if ($lookup->isAmbiguous()) {
-            return GenericViewElement::create('<div class="alert alert-warning">' . e(I18N::translate('Several Wikidata identifiers are configured for this shared place.')) . '</div>');
+            return GenericViewElement::create('<div class="alert alert-warning">' . e(MoreI18N::translate('Several Wikidata identifiers are configured for this shared place.')) . '</div>');
         }
 
         $identifier = $lookup->identifier();
@@ -68,21 +86,28 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         }
 
         $label = $entity?->label ?? $identifier->qid();
-        $html  = '<section class="wt-wikidata-places mt-3">';
-        $html .= '<h3>' . e(I18N::translate('Wikidata')) . '</h3>';
-        $html .= '<p><a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')</p>';
+        $html  = '<br><br><strong>' . e(MoreI18N::translate('Wikidata')) . ':</strong> ';
+        $html .= '<a href="' . e($identifier->entityUrl()) . '" rel="noopener noreferrer" target="_blank">' . e($label) . '</a> (' . e($identifier->qid()) . ')';
         if ($entity?->description !== null) {
-            $html .= '<p>' . e($entity->description) . '</p>';
+            $html .= ' — ' . e($entity->description);
         }
-        if ($entity?->instanceOfQids !== []) {
-            $html .= '<p><strong>' . e(I18N::translate('Type')) . ':</strong> ' . e(implode(', ', $entity->instanceOfQids)) . '</p>';
+        if ($entity !== null && $entity->instanceOfQids !== []) {
+            $typeLabels = (new WikidataClient())->labels($entity->instanceOfQids, $language);
+            $types      = array_map(static fn (string $qid): string => $typeLabels[$qid] ?? $qid, $entity->instanceOfQids);
+            $html .= '<br>' . e(I18N::translate('Type')) . ': ' . e(implode(', ', $types));
         }
         if ($entity?->commonsFileName !== null) {
             $fileUrl = 'https://commons.wikimedia.org/wiki/Special:FilePath/' . rawurlencode($entity->commonsFileName);
-            $html .= '<p><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Image on Wikimedia Commons')) . '</a></p>';
-            $html .= '<p class="small text-muted">' . e(I18N::translate('Image source and licence: Wikimedia Commons')) . '</p>';
+            $html .= '<br><a href="' . e($fileUrl) . '" rel="noopener noreferrer" target="_blank">' . e(MoreI18N::translate('Image on Wikimedia Commons')) . '</a>';
         }
-        $html .= '<p class="small text-muted">' . e(I18N::translate('Source: Wikidata')) . '</p></section>';
+        if ($entity === null) {
+            $html .= ' — <small>' . e(MoreI18N::translate('Wikidata details are currently unavailable.')) . '</small>';
+        }
+        $html .= '<br><small>' . e(MoreI18N::translate('Source')) . ': Wikidata</small>';
+
+        if ($location->canEdit()) {
+            $html .= '<br><a href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>';
+        }
 
         return GenericViewElement::create($html);
     }
@@ -104,12 +129,12 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
 
     public function title(): string
     {
-        return I18N::translate('Wikidata Places');
+        return MoreI18N::translate('Wikidata Places');
     }
 
     public function description(): string
     {
-        return I18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
+        return MoreI18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
     }
 
     public function customModuleAuthorName(): string

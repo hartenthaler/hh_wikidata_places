@@ -20,6 +20,7 @@ final class WikidataClient
 {
     private const ENDPOINT = 'https://www.wikidata.org/w/api.php';
     private const MAX_RESPONSE_BYTES = 1_000_000;
+    private const MAX_SEARCH_RESULTS = 10;
 
     public function __construct(
         private readonly ClientInterface $httpClient = new Client(),
@@ -35,6 +36,10 @@ final class WikidataClient
             $response = $this->httpClient->request('GET', self::ENDPOINT, [
                 'allow_redirects' => false,
                 'connect_timeout' => 3.0,
+                'headers'         => [
+                    'Accept'     => 'application/json',
+                    'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)',
+                ],
                 'http_errors'     => false,
                 'query'           => [
                     'action'        => 'wbgetentities',
@@ -66,6 +71,93 @@ final class WikidataClient
         }
 
         return is_array($payload) ? $this->mapper->map($identifier, $payload, $language) : null;
+    }
+
+    /**
+     * Resolve a small, already validated set of item identifiers for display.
+     *
+     * @param list<string> $qids
+     * @return array<string, string>
+     */
+    public function labels(array $qids, string $language): array
+    {
+        $qids = array_values(array_unique(array_filter($qids, static fn (string $qid): bool => preg_match('/^Q[1-9][0-9]*$/', $qid) === 1)));
+        if ($qids === []) {
+            return [];
+        }
+
+        $language = $this->language($language);
+        try {
+            $response = $this->httpClient->request('GET', self::ENDPOINT, [
+                'allow_redirects' => false,
+                'connect_timeout' => 3.0,
+                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                'http_errors'     => false,
+                'query'           => ['action' => 'wbgetentities', 'format' => 'json', 'formatversion' => '2', 'ids' => implode('|', array_slice($qids, 0, 10)), 'languages' => $language . '|en', 'props' => 'labels'],
+                'timeout'         => 6.0,
+            ]);
+            $payload = json_decode($response->getBody()->getContents(), true, 16, JSON_THROW_ON_ERROR);
+        } catch (GuzzleException|JsonException) {
+            return [];
+        }
+
+        $labels = [];
+        foreach (($payload['entities'] ?? []) as $qid => $entity) {
+            $label = $entity['labels'][$language]['value'] ?? $entity['labels']['en']['value'] ?? null;
+            if (is_string($qid) && is_string($label)) {
+                $labels[$qid] = $label;
+            }
+        }
+
+        return $labels;
+    }
+
+    /** @return list<WikidataSearchResult> */
+    public function search(string $term, string $language): array
+    {
+        $term = trim($term);
+        if (mb_strlen($term) < 2 || mb_strlen($term) > 120) {
+            return [];
+        }
+
+        $language = $this->language($language);
+        try {
+            $response = $this->httpClient->request('GET', self::ENDPOINT, [
+                'allow_redirects' => false,
+                'connect_timeout' => 3.0,
+                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                'http_errors'     => false,
+                'query'           => [
+                    'action'   => 'wbsearchentities',
+                    'format'   => 'json',
+                    'language' => $language,
+                    'limit'    => self::MAX_SEARCH_RESULTS,
+                    'search'   => $term,
+                    'type'     => 'item',
+                ],
+                'timeout'         => 6.0,
+            ]);
+            $body = $response->getBody()->getContents();
+            if ($response->getStatusCode() !== 200 || strlen($body) > self::MAX_RESPONSE_BYTES) {
+                return [];
+            }
+            $payload = json_decode($body, true, 16, JSON_THROW_ON_ERROR);
+        } catch (GuzzleException|JsonException) {
+            return [];
+        }
+
+        $results = [];
+        foreach (array_slice($payload['search'] ?? [], 0, self::MAX_SEARCH_RESULTS) as $candidate) {
+            $qid   = $candidate['id'] ?? null;
+            $label = $candidate['label'] ?? null;
+            if (!is_string($qid) || preg_match('/^Q[1-9][0-9]*$/', $qid) !== 1 || !is_string($label) || $label === '') {
+                continue;
+            }
+            $description = $candidate['description'] ?? null;
+            $results[] = new WikidataSearchResult($qid, $label, is_string($description) && $description !== '' ? $description : null);
+        }
+
+        return $results;
     }
 
     private function language(string $language): string

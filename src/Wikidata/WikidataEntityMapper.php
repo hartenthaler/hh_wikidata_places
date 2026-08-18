@@ -12,7 +12,22 @@ final class WikidataEntityMapper
     /** @param array<string, mixed> $payload */
     public function map(WikidataIdentifier $identifier, array $payload, string $language): ?WikidataEntity
     {
-        $entity = $payload['entities'][$identifier->qid()] ?? null;
+        $entityQid = $identifier->qid();
+        $entity    = $payload['entities'][$entityQid] ?? null;
+        if (!is_array($entity) || array_key_exists('missing', $entity)) {
+            foreach ($payload['redirects'] ?? [] as $redirect) {
+                $from = $redirect['from'] ?? null;
+                $to   = $redirect['to'] ?? null;
+                if ($from === $identifier->qid() && is_string($to) && preg_match('/^Q[1-9][0-9]*$/', $to) === 1) {
+                    $candidate = $payload['entities'][$to] ?? null;
+                    if (is_array($candidate) && !array_key_exists('missing', $candidate)) {
+                        $entityQid = $to;
+                        $entity    = $candidate;
+                    }
+                    break;
+                }
+            }
+        }
         if (!is_array($entity) || array_key_exists('missing', $entity)) {
             return null;
         }
@@ -22,7 +37,7 @@ final class WikidataEntityMapper
         $claims      = is_array($entity['claims'] ?? null) ? $entity['claims'] : [];
 
         return new WikidataEntity(
-            $identifier->qid(),
+            $entityQid,
             $label,
             $description,
             $this->entityIds($claims['P31'] ?? []),
