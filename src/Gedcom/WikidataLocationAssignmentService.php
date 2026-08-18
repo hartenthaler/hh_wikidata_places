@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom;
 
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Location;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
 
@@ -31,7 +32,7 @@ final class WikidataLocationAssignmentService
             return false;
         }
 
-        $location->updateRecord($this->editor->replace($location->gedcom(), $identifier), true);
+        $location->updateRecord($this->withUpdatedChange($this->editor->replace($location->gedcom(), $identifier)), false);
 
         return true;
     }
@@ -43,8 +44,32 @@ final class WikidataLocationAssignmentService
             return false;
         }
 
-        $location->updateRecord($this->editor->remove($location->gedcom()), true);
+        $location->updateRecord($this->withUpdatedChange($this->editor->remove($location->gedcom())), false);
 
         return true;
+    }
+
+    /**
+     * webtrees does not add CHAN data to _LOC records.  Vesta shared places
+     * already use this conventional block, so update it with the same logic
+     * that webtrees applies to its record types with native CHAN support.
+     */
+    private function withUpdatedChange(string $gedcom): string
+    {
+        if (preg_match('/\n1 CHAN(?:\n[2-9].*)*/', $gedcom, $match) === 1) {
+            return strtr($gedcom, [$match[0] => $this->updatedChangeBlock($match[0])]);
+        }
+
+        return rtrim($gedcom) . $this->updatedChangeBlock("\n1 CHAN") . "\n";
+    }
+
+    private function updatedChangeBlock(string $gedcom): string
+    {
+        $gedcom = preg_replace('/\n2 (DATE|_WT_USER).*(\n[3-9].*)*/', '', $gedcom) ?? $gedcom;
+
+        return $gedcom
+            . "\n2 DATE " . strtoupper(date('d M Y'))
+            . "\n3 TIME " . date('H:i:s')
+            . "\n2 _WT_USER " . Auth::user()->userName();
     }
 }

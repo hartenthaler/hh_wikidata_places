@@ -41,7 +41,7 @@ The current release provides:
 * using the webtrees language with a sensible fallback; and
 * showing Wikidata and Wikimedia Commons provenance for displayed data and images;
 * a protected search page for finding, reviewing and manually assigning Wikidata items; and
-* controlled removal and replacement of stored QIDs, including an explicit offer to replace a redirected Wikidata item.
+* controlled removal and replacement of stored QIDs, including an explicit offer to replace a redirected Wikidata item and an updated shared-place change record.
 
 Nearby discovery, Domus deep links and extended house-history metadata follow in later milestones.
 
