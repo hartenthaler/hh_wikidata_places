@@ -28,7 +28,7 @@ The module does not synchronize with Wikidata or send genealogical person data t
 
 ## 🏠 Domus
 
-[Domus](https://domus.genealogy.net) is an open application for researching the history of houses and buildings. It complements webtrees: webtrees remains the place for private genealogical data, while Domus can provide specialised public research and map views. This module will offer an optional outbound link to a Domus map for a linked Wikidata QID in a later milestone.
+[Domus](https://domus.genealogy.net) is an open application for researching the history of houses and buildings. It complements webtrees: webtrees remains the place for private genealogical data, while Domus can provide specialised public research and map views. **Show in Domus** opens the linked Wikidata item in Domus in a new tab. Without a Wikidata link, it opens the Domus map start page. The module does not embed Domus or synchronize data with it.
 
 ## ⚙️ Main features
 
@@ -42,9 +42,10 @@ The current release provides:
 * showing Wikidata and Wikimedia Commons provenance for displayed data and images;
 * a protected search page for finding, reviewing and manually assigning Wikidata items; and
 * controlled removal and replacement of stored QIDs, including an explicit offer to replace a redirected Wikidata item and an updated shared-place change record; and
-* an editor-only nearby search for shared places with coordinates, ordered by name similarity and distance.
+* an editor-only nearby search for shared places with coordinates, ordered by name similarity and distance; and
+* a read-only outbound link to Domus, using its documented QID deep link where available.
 
-Domus deep links and extended house-history metadata follow in later milestones.
+Extended house-history metadata follows in later milestones.
 
 ## 🔒 Privacy
 
@@ -77,6 +78,8 @@ An editor can use **Assign Wikidata item** on the shared-place page to search Wi
 If an existing item has been merged or redirected by Wikidata, the assignment page shows the replacement QID and lets the editor apply it explicitly.
 
 For a shared place with GEDCOM `MAP`, `LATI` and `LONG` coordinates, editors can also use **Search nearby**. The module shows at most 20 candidates inside the configured radius. It ranks suggestions by matching name and distance, but never creates a link automatically. Administrators can choose the radius independently for every family tree in the module's configuration.
+
+Search results use a compact table. It shows the item label and QID, its description and—where applicable—its distance. The link icon opens the public Wikidata item; **Assign** remains an explicit editor action.
 
 ## 📖 Documentation
 

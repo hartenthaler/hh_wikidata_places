@@ -20,9 +20,11 @@ use Fisharebest\Webtrees\Validator;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domus\DomusMapLinkProvider;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentPage;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\NearbyDiscoverySettings;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\LocationCoordinates;
 use Vesta\Model\GenericViewElement;
 use Vesta\Model\GovReference;
 use Vesta\Model\LocReference;
@@ -74,6 +76,8 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         }
 
         $identifier = $lookup->identifier();
+        $coordinates = LocationCoordinates::fromGedcom($location->gedcom());
+        $domusUrl = (new DomusMapLinkProvider())->url($identifier, $coordinates);
         if ($identifier === null) {
             if (!$location->canEdit()) {
                 return null;
@@ -82,6 +86,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
             return GenericViewElement::create(
                 '<br><br><strong>' . e(MoreI18N::translate('Wikidata')) . ':</strong><br>'
                 . '<a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>'
+                . '<a class="btn btn-primary btn-sm mt-2 ms-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(MoreI18N::translate('Show in Domus')) . '</a>'
             );
         }
 
@@ -114,6 +119,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
             $html .= ' — <small>' . e(MoreI18N::translate('Wikidata details are currently unavailable.')) . '</small>';
         }
         $html .= '<br><small>' . e(MoreI18N::translate('Source')) . ': Wikidata</small>';
+        $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(MoreI18N::translate('Show in Domus')) . '</a>';
 
         if ($location->canEdit()) {
             $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(MoreI18N::translate('Assign Wikidata item')) . '</a>';

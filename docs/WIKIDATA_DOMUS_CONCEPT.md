@@ -97,7 +97,7 @@ Labels/Beschreibungen folgen der webtrees-Spracheinstellung mit Fallback. Wikida
 
 ### F5 – Domus-Verknüpfung
 
-Ein Button „In Domus anzeigen“ verwendet – sobald von Domus stabil unterstützt – bevorzugt QID, sonst Koordinate, sonst die Kartenstartseite.
+Ein Button „In Domus anzeigen“ verwendet den dokumentierten QID-Link `https://domus.genealogy.net/map/?id=Q…`. Ohne QID öffnet er die Kartenstartseite. Eine Koordinaten-URL wird erst verwendet, wenn Domus dafür einen stabilen Vertrag dokumentiert.
 
 ### F6 – Domus-Link als Adapter
 

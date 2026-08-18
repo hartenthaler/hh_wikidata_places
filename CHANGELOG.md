@@ -19,7 +19,9 @@ All notable user-facing changes are documented here.
 - Automatic disclosure of Wikidata access to the optional Legal Notice module.
 - Nearby discovery for shared places with coordinates, including distance display and transparent name/distance ranking.
 - A configurable nearby-search radius for each family tree (default: 5 km).
+- A direct, read-only **Show in Domus** link.  Linked Wikidata items open their Domus map entry; other shared places open the Domus map start page.
+- More compact, accessible tables for normal and nearby Wikidata search results, with an icon link to the public Wikidata item.
 
 ### Planned next
 
-- Nearby discovery and Domus deep links.
+- Extended house-history metadata.

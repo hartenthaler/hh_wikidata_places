@@ -46,6 +46,21 @@ msgstr ""
 msgid "Search nearby"
 msgstr ""
 
+msgid "Show in Domus"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Distance"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
 msgid "Choose how far the editor-only nearby search may look around a shared place."
 msgstr ""
 
