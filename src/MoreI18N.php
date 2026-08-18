@@ -8,7 +8,7 @@ use Fisharebest\Webtrees\I18N;
 
 final class MoreI18N
 {
-    public static function translate(string $message, string ...$args): string
+    public static function xlate(string $message, string ...$args): string
     {
         // A stale compiled/template cache must not turn a translated string
         // with placeholders into a fatal sprintf() error.  Current callers

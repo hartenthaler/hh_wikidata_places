@@ -11,6 +11,9 @@ final class WikidataEntity
 {
     /**
      * @param list<string> $instanceOfQids
+     * @param list<HistoricAddress> $historicAddresses
+     * @param list<HistoricPersonRelation> $owners
+     * @param list<HistoricPersonRelation> $occupants
      */
     public function __construct(
         public readonly string $qid,
@@ -18,6 +21,9 @@ final class WikidataEntity
         public readonly ?string $description,
         public readonly array $instanceOfQids,
         public readonly ?string $commonsFileName,
+        public readonly array $historicAddresses,
+        public readonly array $owners,
+        public readonly array $occupants,
     ) {
     }
 

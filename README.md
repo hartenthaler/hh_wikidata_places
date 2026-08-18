@@ -1,7 +1,7 @@
 # **webtrees** module: Wikidata Places
 
 ![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green)
-[![Module version](https://img.shields.io/badge/version-0.1.0-blue)](version.txt)
+[![Module version](https://img.shields.io/badge/version-2.2.6.0-blue)](version.txt)
 [![Downloads](https://img.shields.io/github/downloads/hartenthaler/hh_wikidata_places/total?label=downloads)](https://github.com/hartenthaler/hh_wikidata_places/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -11,6 +11,7 @@ Wikidata Places connects [Vesta Shared Places](https://github.com/vesta-webtrees
 
 * [Purpose](#purpose)
 * [Main features](#main-features)
+* [Screenshot](#screenshot)
 * [Domus](#domus)
 * [Privacy](#privacy)
 * [Requirements](#requirements)
@@ -44,8 +45,14 @@ The current release provides:
 * controlled removal and replacement of stored QIDs, including an explicit offer to replace a redirected Wikidata item and an updated shared-place change record; and
 * an editor-only nearby search for shared places with coordinates, ordered by name similarity and distance; and
 * a read-only outbound link to Domus, using its documented QID deep link where available.
+* historical addresses from Wikidata, when the linked item actually has an address statement.
+* public Wikidata owners and occupants with external links, known life dates and historical relationship dates.
 
-Extended house-history metadata follows in later milestones.
+## 🖼️ Screenshot
+
+The shared-place summary keeps the local genealogy record in webtrees and adds a compact, read-only Wikidata panel.
+
+![Wikidata information shown for a shared place](docs/images/screenshot1.jpg)
 
 ## 🔒 Privacy
 
@@ -81,11 +88,18 @@ For a shared place with GEDCOM `MAP`, `LATI` and `LONG` coordinates, editors can
 
 Search results use a compact table. It shows the item label and QID, its description and—where applicable—its distance. The link icon opens the public Wikidata item; **Assign** remains an explicit editor action.
 
+When Wikidata provides address statements, the shared-place page shows a read-only address table with house number, street, postal code, place and optional validity dates. It is intentionally omitted for items without address data, such as most settlements or administrative areas.
+
+Where Wikidata contains them, the same panel also shows public owners and occupants. These are external Wikidata facts: no webtrees person is linked, changed or created. The table gives the public Wikidata name and link, known birth/death dates and the period of the relationship.
+
 ## 📖 Documentation
 
 * [Concept: Wikidata and Domus integration](docs/WIKIDATA_DOMUS_CONCEPT.md)
 * [Roadmap](docs/ROADMAP.md)
 * [Development notes](docs/DEVELOPMENT.md)
+* [Historical address model](docs/HISTORICAL_ADDRESSES.md)
+* [Owner and occupant metadata](docs/OWNER_AND_OCCUPANT_METADATA.md)
+* [Version 2 roadmap](docs/ROADMAP.md)
 * [Changelog](CHANGELOG.md)
 
 ## 🌐 Translation

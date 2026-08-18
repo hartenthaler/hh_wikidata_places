@@ -1,7 +1,7 @@
 # Konzept – webtrees-Modul Wikidata Places / Domus
 
 **Arbeitstitel:** `hh_wikidata_places`  
-**Stand:** 17.08.2026  
+**Stand:** 19.08.2026
 **Zielplattform:** webtrees 2.2.x, zunächst GEDCOM 5.5.1 mit Vesta Shared Places  
 **Abhängigkeit:** Vesta Shared Places für `_LOC`-Datensätze
 
@@ -61,7 +61,7 @@ Für den MVP gilt: höchstens eine Wikidata-QID pro `_LOC`.
 ## 3. Abgrenzung der Systeme
 
 - **webtrees/GEDCOM:** genealogische Daten, Ereignisse, Personen, Familien, Quellen und `_LOC`.
-- **Wikidata:** öffentliche Aussagen zu Orten/Gebäuden, z. B. Typ, Koordinate, Bauzeit, Bilder, Adressen und ggf. historische Beziehungen.
+- **Wikidata:** öffentliche Aussagen zu Orten/Gebäuden, z. B. Typ, Koordinate, Bauzeit, Bilder, historische Adressen sowie Eigentümer- und Bewohnerbeziehungen.
 - **Domus:** spezialisierte Recherche-, Karten- und Bearbeitungsoberfläche für Hausgeschichte auf Basis offener Daten.
 
 Das Modul synchronisiert nicht mit Domus und schreibt nicht nach Wikidata zurück.
@@ -89,7 +89,7 @@ MVP:
 - Bild (`P18`)
 - Adresse soweit sinnvoll modelliert
 
-Später: historische Adressen, administrative Einordnung, Architekt, Denkmalschutz, Eigentümer, Bewohner, Commons-Kategorie und weitere externe Identifier.
+Verfügbar sind außerdem historische Adressen sowie Eigentümer und Bewohner/Nutzer. Diese Personenangaben bleiben öffentliche externe Wikidata-Informationen; sie werden nicht mit webtrees-Personen aufgelöst und nicht in GEDCOM importiert.
 
 ### F4 – Sprache und Provenienz
 
@@ -112,7 +112,7 @@ Zwei Ebenen:
 
 ## 6. Personenbeziehungen
 
-Bewohner-/Eigentümerangaben aus Wikidata werden im MVP nicht mit webtrees-Personen aufgelöst oder als GEDCOM-Fakten importiert. Entity Resolution zwischen Wikidata-Personen und webtrees-Personen ist ein separates späteres Vorhaben.
+Bewohner-/Eigentümerangaben aus Wikidata werden angezeigt, aber nicht mit webtrees-Personen aufgelöst oder als GEDCOM-Fakten importiert. Entity Resolution zwischen Wikidata-/FactGrid-Personen und webtrees-Personen ist ein separates Version-2-Vorhaben.
 
 ## 7. Datenschutz
 
