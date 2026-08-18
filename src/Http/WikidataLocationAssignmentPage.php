@@ -16,6 +16,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+use function http_build_query;
+use function parse_str;
 use function route;
 
 /** Search and review Wikidata items before explicitly assigning one to a shared place. */
@@ -28,21 +30,29 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
         $tree     = Validator::attributes($request)->tree();
         $xref     = Validator::attributes($request)->isXref()->string('xref');
         $location = Auth::checkLocationAccess(Registry::locationFactory()->make($xref, $tree), true);
-        $language = explode('-', str_replace('_', '-', I18N::languageTag()))[0] ?: 'en';
-        $search   = trim(Validator::queryParams($request)->string('search', ''));
-        $client   = new WikidataClient();
+        $language        = explode('-', str_replace('_', '-', I18N::languageTag()))[0] ?: 'en';
+        $submittedSearch = trim(Validator::queryParams($request)->string('search', ''));
+        $nameFact        = $location->facts(['NAME'])->first();
+        $locationName    = $nameFact === null ? $location->xref() : $nameFact->value();
+        $search          = $submittedSearch === '' ? $locationName : $submittedSearch;
+        $client          = new WikidataClient();
+        $query           = [];
+        parse_str($request->getUri()->getQuery(), $query);
+        unset($query['search']);
+        $searchUrl = (string) $request->getUri()->withQuery(http_build_query($query, '', '&', PHP_QUERY_RFC3986));
 
         $current = (new ExternalIdService())->wikidataIdentifiers($location->gedcom())->identifier();
         $entity  = $current === null ? null : $client->fetch($current, $language);
 
         return $this->viewResponse('hh_wikidata_places::assignment', [
             'assignment_url' => route('hh-wikidata-places.assignment', ['tree' => $tree->name(), 'xref' => $location->xref()]),
-            'candidates'     => $search === '' ? [] : $client->search($search, $language),
+            'candidates'     => $submittedSearch === '' ? [] : $client->search($submittedSearch, $language),
             'current'        => $current,
             'entity'         => $entity,
             'location'       => $location,
+            'location_name'  => $locationName,
             'search'         => $search,
-            'search_url'     => route('hh-wikidata-places.assignment-page', ['tree' => $tree->name(), 'xref' => $location->xref()]),
+            'search_url'     => $searchUrl,
             'title'          => MoreI18N::translate('Assign Wikidata item'),
             'tree'           => $tree,
         ]);

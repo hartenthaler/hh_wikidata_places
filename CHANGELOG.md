@@ -14,6 +14,7 @@ All notable user-facing changes are documented here.
 - Explicit controls to remove an assigned Wikidata item.
 - Detection of Wikidata redirects and merged items, with an editor-controlled replacement action.
 - German translations for the displayed information and assignment interface.
+- Automatic disclosure of Wikidata access to the optional Legal Notice module.
 
 ### Planned next
 
