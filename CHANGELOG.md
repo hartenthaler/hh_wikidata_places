@@ -7,11 +7,14 @@ All notable user-facing changes are documented here.
 ### Added
 
 - Initial project setup for webtrees 2.2 and Vesta Shared Places.
-- Foundation for Wikidata identifiers on shared places.
+- Recognition and validation of Wikidata identifiers on shared places.
 - Read-only Wikidata enrichment with local caching and language fallback.
 - Public-source and image-attribution information.
+- A protected search page where editors can review and assign a Wikidata item to a shared place.
+- Explicit controls to remove an assigned Wikidata item.
+- Detection of Wikidata redirects and merged items, with an editor-controlled replacement action.
+- German translations for the displayed information and assignment interface.
 
 ### Planned next
 
-- Search, manual assignment and removal of Wikidata identifiers.
 - Nearby discovery and Domus deep links.

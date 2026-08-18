@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
+
+/** @var string $assignment_url */
+/** @var list<Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataSearchResult> $candidates */
+/** @var Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier|null $current */
+/** @var Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataEntity|null $entity */
+/** @var Fisharebest\Webtrees\Location $location */
+/** @var string $search */
+/** @var string $search_url */
+?>
+
+<p>
+    <?= MoreI18N::translate('Choose the Wikidata item that describes this shared place.') ?>
+    <a href="<?= e($location->url()) ?>"><?= e($location->fullName()) ?></a>
+</p>
+
+<?php if ($current !== null) : ?>
+    <div class="alert alert-info">
+        <?= MoreI18N::translate('Current Wikidata item') ?>:
+        <a href="<?= e($entity?->qid === null ? $current->entityUrl() : 'https://www.wikidata.org/entity/' . $entity->qid) ?>" rel="noopener noreferrer" target="_blank"><?= e($entity?->label ?? $current->qid()) ?></a>
+        (<?= e($current->qid()) ?>)
+        <?php if ($entity !== null && $entity->qid !== $current->qid()) : ?>
+            <br>
+            <?= MoreI18N::translate('Wikidata redirects this item to') ?>: <?= e($entity->qid) ?>
+            <form method="post" action="<?= e($assignment_url) ?>" class="d-inline">
+                <?= csrf_field() ?>
+                <input type="hidden" name="operation" value="assign">
+                <input type="hidden" name="qid" value="<?= e($entity->qid) ?>">
+                <button class="btn btn-sm btn-primary" type="submit"><?= MoreI18N::translate('Replace with the redirected Wikidata item') ?></button>
+            </form>
+        <?php endif ?>
+        <form method="post" action="<?= e($assignment_url) ?>" class="d-inline">
+            <?= csrf_field() ?>
+            <input type="hidden" name="operation" value="remove">
+            <button class="btn btn-sm btn-outline-danger" type="submit"><?= MoreI18N::translate('Remove Wikidata item') ?></button>
+        </form>
+    </div>
+<?php endif ?>
+
+<form method="get" action="<?= e($search_url) ?>" class="row g-2 mb-4">
+    <div class="col-sm-8">
+        <label class="visually-hidden" for="wikidata-search"><?= MoreI18N::translate('Search Wikidata') ?></label>
+        <input class="form-control" id="wikidata-search" maxlength="120" minlength="2" name="search" required type="search" value="<?= e($search) ?>" placeholder="<?= e(MoreI18N::translate('Search Wikidata')) ?>">
+    </div>
+    <div class="col-sm-4">
+        <button class="btn btn-primary" type="submit"><?= MoreI18N::translate('Search') ?></button>
+    </div>
+</form>
+
+<?php if ($search !== '' && $candidates === []) : ?>
+    <div class="alert alert-secondary"><?= MoreI18N::translate('No Wikidata items were found.') ?></div>
+<?php endif ?>
+
+<?php foreach ($candidates as $candidate) : ?>
+    <div class="card mb-2">
+        <div class="card-body">
+            <strong><?= e($candidate->label) ?></strong> <span class="text-muted">(<?= e($candidate->qid) ?>)</span>
+            <?php if ($candidate->description !== null) : ?>
+                <div><?= e($candidate->description) ?></div>
+            <?php endif ?>
+            <a href="<?= e($candidate->entityUrl()) ?>" rel="noopener noreferrer" target="_blank"><?= MoreI18N::translate('Open in Wikidata') ?></a>
+            <form method="post" action="<?= e($assignment_url) ?>" class="d-inline">
+                <?= csrf_field() ?>
+                <input type="hidden" name="operation" value="assign">
+                <input type="hidden" name="qid" value="<?= e($candidate->qid) ?>">
+                <button class="btn btn-sm btn-primary" type="submit"><?= MoreI18N::translate('Assign') ?></button>
+            </form>
+        </div>
+    </div>
+<?php endforeach ?>

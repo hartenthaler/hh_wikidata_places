@@ -1,0 +1,66 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Wikidata Places\n"
+"Language: de\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Image on Wikimedia Commons"
+msgstr "Bild auf Wikimedia Commons"
+
+msgid "Assign"
+msgstr "Zuordnen"
+
+msgid "Assign Wikidata item"
+msgstr "Wikidata-Element zuordnen"
+
+msgid "Choose the Wikidata item that describes this shared place."
+msgstr "Wählen Sie das Wikidata-Element aus, das diesen gemeinsamen Ort beschreibt."
+
+msgid "Current Wikidata item"
+msgstr "Aktuelles Wikidata-Element"
+
+msgid "Invalid Wikidata assignment operation."
+msgstr "Ungültige Wikidata-Zuordnungsoperation."
+
+msgid "Invalid Wikidata identifier."
+msgstr "Ungültige Wikidata-Kennung."
+
+msgid "Links shared places to Wikidata and exposes read-only Wikidata data and Domus links."
+msgstr "Verknüpft gemeinsame Orte mit Wikidata und zeigt schreibgeschützte Wikidata-Daten und Domus-Links an."
+
+msgid "Several Wikidata identifiers are configured for this shared place."
+msgstr "Für diesen gemeinsamen Ort sind mehrere Wikidata-Kennungen konfiguriert."
+
+msgid "No Wikidata items were found."
+msgstr "Es wurden keine Wikidata-Elemente gefunden."
+
+msgid "Open in Wikidata"
+msgstr "In Wikidata öffnen"
+
+msgid "Remove Wikidata item"
+msgstr "Wikidata-Element entfernen"
+
+msgid "Replace with the redirected Wikidata item"
+msgstr "Durch das weitergeleitete Wikidata-Element ersetzen"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Search Wikidata"
+msgstr "Wikidata durchsuchen"
+
+msgid "Source"
+msgstr "Quelle"
+
+msgid "Wikidata"
+msgstr "Wikidata"
+
+msgid "Wikidata details are currently unavailable."
+msgstr "Wikidata-Details sind derzeit nicht verfügbar."
+
+msgid "Wikidata Places"
+msgstr "Wikidata-Orte"
+
+msgid "Wikidata redirects this item to"
+msgstr "Wikidata leitet dieses Element weiter zu"
