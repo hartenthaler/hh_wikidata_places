@@ -17,6 +17,8 @@ All notable user-facing changes are documented here.
 - Detection of Wikidata redirects and merged items, with an editor-controlled replacement action.
 - German translations for the displayed information and assignment interface.
 - Automatic disclosure of Wikidata access to the optional Legal Notice module.
+- Nearby discovery for shared places with coordinates, including distance display and transparent name/distance ranking.
+- A configurable nearby-search radius for each family tree (default: 5 km).
 
 ### Planned next
 

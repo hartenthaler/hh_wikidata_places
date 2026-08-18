@@ -11,6 +11,11 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 /** @var Fisharebest\Webtrees\Location $location */
 /** @var string $location_name */
 /** @var string $search */
+/** @var bool $has_search */
+/** @var array{latitude:float,longitude:float}|null $coordinates */
+/** @var list<Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataNearbyCandidate> $nearby_candidates */
+/** @var bool $nearby_requested */
+/** @var float $nearby_radius_km */
 /** @var string $search_url */
 /** @var string|null $route_parameter */
 ?>
@@ -51,12 +56,41 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
         <label class="visually-hidden" for="wikidata-search"><?= MoreI18N::translate('Search Wikidata') ?></label>
         <input class="form-control" id="wikidata-search" maxlength="120" minlength="2" name="search" required type="search" value="<?= e($search) ?>" placeholder="<?= e(MoreI18N::translate('Search Wikidata')) ?>">
     </div>
-    <div class="col-sm-4">
-        <button class="btn btn-primary" type="submit"><?= MoreI18N::translate('Search') ?></button>
+    <div class="col-sm-4 d-flex gap-2">
+        <button class="btn btn-outline-secondary" type="submit"><?= MoreI18N::translate('Search') ?></button>
+        <?php if ($coordinates !== null) : ?>
+            <button class="btn btn-primary" formnovalidate name="nearby" type="submit" value="1"><?= MoreI18N::translate('Search nearby') ?></button>
+        <?php endif ?>
     </div>
 </form>
 
-<?php if ($search !== '' && $candidates === []) : ?>
+<?php if ($nearby_requested && $nearby_candidates === []) : ?>
+    <div class="alert alert-secondary"><?= MoreI18N::translate('No nearby Wikidata items were found.') ?></div>
+<?php endif ?>
+
+<?php if ($nearby_candidates !== []) : ?>
+    <h2><?= MoreI18N::translate('Nearby Wikidata items') ?></h2>
+    <p class="text-muted"><?= MoreI18N::translate('Candidates within %s km are sorted by name similarity and distance.', number_format($nearby_radius_km, 1)) ?></p>
+    <?php foreach ($nearby_candidates as $candidate) : ?>
+        <?php $isCurrent = $current !== null && $candidate->qid === $current->qid() ?>
+        <div class="card mb-2<?= $isCurrent ? ' border-success bg-light' : '' ?>">
+            <div class="card-body py-2">
+                <strong><?= e($candidate->label) ?></strong> <span class="text-muted">(<?= e($candidate->qid) ?>)</span>
+                <?php if ($candidate->description !== null) : ?><div><?= e($candidate->description) ?></div><?php endif ?>
+                <small class="text-muted"><?= e(number_format($candidate->distanceKm, 1)) ?> km</small>
+                <a class="ms-2" href="<?= e($candidate->entityUrl()) ?>" rel="noopener noreferrer" target="_blank"><?= MoreI18N::translate('Open in Wikidata') ?></a>
+                <form action="<?= e($assignment_url) ?>" class="d-inline ms-2" method="post">
+                    <?= csrf_field() ?>
+                    <input name="operation" type="hidden" value="assign">
+                    <input name="qid" type="hidden" value="<?= e($candidate->qid) ?>">
+                    <button class="btn btn-sm btn-outline-primary" type="submit"><?= MoreI18N::translate('Assign') ?></button>
+                </form>
+            </div>
+        </div>
+    <?php endforeach ?>
+<?php endif ?>
+
+<?php if ($has_search && $candidates === []) : ?>
     <div class="alert alert-secondary"><?= MoreI18N::translate('No Wikidata items were found.') ?></div>
 <?php endif ?>
 

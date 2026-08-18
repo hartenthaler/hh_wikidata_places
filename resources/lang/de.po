@@ -35,6 +35,30 @@ msgstr "Für diesen gemeinsamen Ort sind mehrere Wikidata-Kennungen konfiguriert
 msgid "No Wikidata items were found."
 msgstr "Es wurden keine Wikidata-Elemente gefunden."
 
+msgid "No nearby Wikidata items were found."
+msgstr "Es wurden keine Wikidata-Elemente in der Nähe gefunden."
+
+msgid "Nearby Wikidata items"
+msgstr "Wikidata-Elemente in der Nähe"
+
+msgid "Candidates within %s km are sorted by name similarity and distance."
+msgstr "Die Treffer im Umkreis von %s km sind nach Namensähnlichkeit und Entfernung sortiert."
+
+msgid "Search nearby"
+msgstr "In der Nähe suchen"
+
+msgid "Choose how far the editor-only nearby search may look around a shared place."
+msgstr "Legen Sie fest, wie weit die Suche in der Nähe eines gemeinsamen Ortes reichen darf."
+
+msgid "Nearby-search radius (km)"
+msgstr "Suchradius in der Nähe (km)"
+
+msgid "Nearby search settings have been updated."
+msgstr "Die Einstellungen für die Suche in der Nähe wurden aktualisiert."
+
+msgid "Coordinates and the configured radius for an editor-requested nearby search."
+msgstr "Koordinaten und der eingestellte Radius für eine von Bearbeitenden ausgelöste Suche in der Nähe."
+
 msgid "Open in Wikidata"
 msgstr "In Wikidata öffnen"
 

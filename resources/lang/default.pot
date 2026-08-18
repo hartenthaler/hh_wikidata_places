@@ -34,6 +34,30 @@ msgstr ""
 msgid "No Wikidata items were found."
 msgstr ""
 
+msgid "No nearby Wikidata items were found."
+msgstr ""
+
+msgid "Nearby Wikidata items"
+msgstr ""
+
+msgid "Candidates within %s km are sorted by name similarity and distance."
+msgstr ""
+
+msgid "Search nearby"
+msgstr ""
+
+msgid "Choose how far the editor-only nearby search may look around a shared place."
+msgstr ""
+
+msgid "Nearby-search radius (km)"
+msgstr ""
+
+msgid "Nearby search settings have been updated."
+msgstr ""
+
+msgid "Coordinates and the configured radius for an editor-requested nearby search."
+msgstr ""
+
 msgid "Open in Wikidata"
 msgstr ""
 
