@@ -6,29 +6,38 @@ namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
 
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
+use Fisharebest\Webtrees\Module\ModuleConfigInterface;
+use Fisharebest\Webtrees\Module\ModuleConfigTrait;
+use Fisharebest\Webtrees\Services\TreeService;
+use Fisharebest\Webtrees\Validator;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentPage;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\NearbyDiscoverySettings;
 use Vesta\Model\GenericViewElement;
 use Vesta\Model\GovReference;
 use Vesta\Model\LocReference;
 use Vesta\Model\MapCoordinates;
 use Vesta\Model\PlaceStructure;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 use function file_exists;
 use function route;
 
-class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterface
+class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterface, ModuleCustomInterface
 {
     use ModuleCustomTrait;
+    use ModuleConfigTrait;
 
     private const MODULE_NAME = 'hh_wikidata_places';
     private const GITHUB_USER = 'hartenthaler';
@@ -138,6 +147,30 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
         return MoreI18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
     }
 
+    public function getAdminAction(): ResponseInterface
+    {
+        $this->layout = 'layouts/administration';
+
+        return $this->viewResponse(self::MODULE_NAME . '::configuration', [
+            'all_trees' => app(TreeService::class)->all(),
+            'default_radius_km' => NearbyDiscoverySettings::DEFAULT_RADIUS_KM,
+            'preference' => NearbyDiscoverySettings::PREFERENCE,
+            'title' => $this->title(),
+        ]);
+    }
+
+    public function postAdminAction(ServerRequestInterface $request): ResponseInterface
+    {
+        foreach (app(TreeService::class)->all() as $tree) {
+            $radius = Validator::parsedBody($request)->string('nearby-radius-' . $tree->id(), (string) NearbyDiscoverySettings::DEFAULT_RADIUS_KM);
+            $tree->setPreference(NearbyDiscoverySettings::PREFERENCE, (string) NearbyDiscoverySettings::normalise($radius));
+        }
+
+        FlashMessages::addMessage(MoreI18N::translate('Nearby search settings have been updated.'), 'success');
+
+        return redirect($this->getConfigLink());
+    }
+
     /**
      * Privacy information consumed opportunistically by hh_legal_notice.
      *
@@ -170,6 +203,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleCustomInterfa
                 'data'        => [
                     MoreI18N::translate('Wikidata item identifiers and the requested display language.'),
                     MoreI18N::translate('Search text entered by an editor.'),
+                    MoreI18N::translate('Coordinates and the configured radius for an editor-requested nearby search.'),
                     MoreI18N::translate('The server IP address and technical request metadata.'),
                 ],
             ]],

@@ -41,13 +41,14 @@ The current release provides:
 * using the webtrees language with a sensible fallback; and
 * showing Wikidata and Wikimedia Commons provenance for displayed data and images;
 * a protected search page for finding, reviewing and manually assigning Wikidata items; and
-* controlled removal and replacement of stored QIDs, including an explicit offer to replace a redirected Wikidata item and an updated shared-place change record.
+* controlled removal and replacement of stored QIDs, including an explicit offer to replace a redirected Wikidata item and an updated shared-place change record; and
+* an editor-only nearby search for shared places with coordinates, ordered by name similarity and distance.
 
-Nearby discovery, Domus deep links and extended house-history metadata follow in later milestones.
+Domus deep links and extended house-history metadata follow in later milestones.
 
 ## 🔒 Privacy
 
-When a Wikidata entry is loaded, the server requests only the public Wikidata QID and the requested display language. Standard technical request metadata is sent by the server. The module never sends names of living people, family relationships, private notes, sources or other genealogical data.
+When a Wikidata entry is loaded, the server requests only the public Wikidata QID and the requested display language. A nearby search also sends the shared place's coordinates and the configured radius to Wikidata. Standard technical request metadata is sent by the server. The module never sends names of living people, family relationships, private notes, sources or other genealogical data.
 
 Responses are cached locally. If Wikidata is temporarily unavailable, the normal Vesta Shared Place page remains available.
 When the optional Legal Notice module is active, it includes Wikidata in the generated privacy policy together with the purpose of the request and the transferred technical data.
@@ -74,6 +75,8 @@ An editor can use **Assign Wikidata item** on the shared-place page to search Wi
 ```
 
 If an existing item has been merged or redirected by Wikidata, the assignment page shows the replacement QID and lets the editor apply it explicitly.
+
+For a shared place with GEDCOM `MAP`, `LATI` and `LONG` coordinates, editors can also use **Search nearby**. The module shows at most 20 candidates inside the configured radius. It ranks suggestions by matching name and distance, but never creates a link automatically. Administrators can choose the radius independently for every family tree in the module's configuration.
 
 ## 📖 Documentation
 

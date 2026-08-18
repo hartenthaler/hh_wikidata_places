@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
+use Fisharebest\Webtrees\Http\RequestHandlers\ModulesAllPage;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
+use Illuminate\Support\Collection;
+
+/** @var Collection<int,Tree> $all_trees */
+/** @var float $default_radius_km */
+/** @var string $preference */
+/** @var string $title */
+?>
+
+<?= view('components/breadcrumbs', ['links' => [route(ControlPanel::class) => I18N::translate('Control panel'), route(ModulesAllPage::class) => I18N::translate('Modules'), $title]]) ?>
+
+<h1><?= e($title) ?></h1>
+<p><?= MoreI18N::translate('Choose how far the editor-only nearby search may look around a shared place.') ?></p>
+
+<form method="post">
+    <?php foreach ($all_trees as $tree) : ?>
+        <h2><?= e($tree->title()) ?></h2>
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="nearby-radius-<?= $tree->id() ?>"><?= MoreI18N::translate('Nearby-search radius (km)') ?></label>
+            <div class="col-sm-3">
+                <input class="form-control" id="nearby-radius-<?= $tree->id() ?>" max="100" min="0.1" name="nearby-radius-<?= $tree->id() ?>" step="0.1" type="number" value="<?= e($tree->getPreference($preference, (string) $default_radius_km)) ?>">
+            </div>
+        </div>
+    <?php endforeach ?>
+    <div class="row mb-3"><div class="offset-sm-3 col-sm-9"><button class="btn btn-primary" type="submit"><?= view('icons/save') ?> <?= I18N::translate('save') ?></button></div></div>
+    <?= csrf_field() ?>
+</form>

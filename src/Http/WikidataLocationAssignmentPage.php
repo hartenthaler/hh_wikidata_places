@@ -12,6 +12,8 @@ use Fisharebest\Webtrees\Validator;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\MoreI18N;
 use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\LocationCoordinates;
+use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\NearbyDiscoverySettings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -39,6 +41,9 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
         $locationName    = $nameFact === null ? $location->xref() : $nameFact->value();
         $search          = $submittedSearch === '' ? $locationName : $submittedSearch;
         $client          = new WikidataClient();
+        $nearbyRequested = ($request->getQueryParams()['nearby'] ?? '') === '1';
+        $coordinates     = LocationCoordinates::fromGedcom($location->gedcom());
+        $radiusKm        = NearbyDiscoverySettings::radius($tree);
         $query           = [];
         parse_str($request->getUri()->getQuery(), $query);
         $routeParameter = $query['route'] ?? null;
@@ -50,10 +55,15 @@ final class WikidataLocationAssignmentPage implements RequestHandlerInterface
         return $this->viewResponse('hh_wikidata_places::assignment', [
             'assignment_url' => route('hh-wikidata-places.assignment-page', ['tree' => $tree->name(), 'xref' => $location->xref()]),
             'candidates'     => $submittedSearch === '' ? [] : $client->search($submittedSearch, $language),
+            'coordinates'    => $coordinates,
             'current'        => $current,
             'entity'         => $entity,
             'location'       => $location,
             'location_name'  => $locationName,
+            'has_search'     => $submittedSearch !== '',
+            'nearby_candidates' => $nearbyRequested && $coordinates !== null ? $client->nearby($coordinates['latitude'], $coordinates['longitude'], $radiusKm, $language, $locationName) : [],
+            'nearby_requested' => $nearbyRequested,
+            'nearby_radius_km' => $radiusKm,
             'search'         => $search,
             'search_url'     => $searchUrl,
             'route_parameter' => is_string($routeParameter) ? $routeParameter : null,
