@@ -5,7 +5,7 @@
 [![Downloads](https://img.shields.io/github/downloads/hartenthaler/hh_external_places/total?label=downloads)](https://github.com/hartenthaler/hh_external_places/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-External Places connects [Vesta Shared Places](https://github.com/vesta-webtrees-2-custom-modules/vesta_shared_places) (`_LOC`) in [webtrees](https://www.webtrees.net) with public, read-only information from Wikidata, FactGrid and GOV. It keeps genealogical data in webtrees and never writes external research data back automatically.
+External Places is a [webtrees](https://www.webtrees.net) module for enriching [Vesta Shared Places](https://github.com/vesta-webtrees-2-custom-modules/vesta_shared_places) (`_LOC`) with public, read-only information from Wikidata, FactGrid and GOV. Editors can assign and compare external place identifiers, search each provider and inspect cached details without copying external research into genealogical data.
 
 ## 📚 Contents
 
