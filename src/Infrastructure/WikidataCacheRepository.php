@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Infrastructure;
 
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataEntity;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\HistoricAddress;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\HistoricPersonRelation;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata\WikidataEntity;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata\HistoricAddress;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata\HistoricPersonRelation;
 use Illuminate\Database\Capsule\Manager as DB;
 use JsonException;
 

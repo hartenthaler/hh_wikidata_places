@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domus;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domus;
 
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\WikidataIdentifier;
 
 /**
  * Isolates Domus URL semantics from webtrees views and Vesta hook output.

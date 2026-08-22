@@ -1,6 +1,9 @@
-# Owner and occupant metadata
+# Owners and occupants from Wikidata
 
-Wikidata Places can show selected public relationships for a shared place.
+This document describes the Wikidata-specific owner and occupant enrichment of
+the provider-neutral **External Places** module.
+
+External Places can show selected public relationships for a shared place.
 The module reads them from Wikidata only and never creates, changes, or links
 webtrees individual records.
 

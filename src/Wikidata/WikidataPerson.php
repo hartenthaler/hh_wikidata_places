@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
 /** A minimal, external-only presentation of a Wikidata person or organisation. */
 final class WikidataPerson

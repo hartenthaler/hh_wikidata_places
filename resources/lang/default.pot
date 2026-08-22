@@ -1,192 +1,316 @@
-# Wikidata Places
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Wikidata Places\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 00:59+0200\n"
-"PO-Revision-Date: \n"
-"Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
-"Language-Team: \n"
-"Language: de\n"
+"POT-Creation-Date: 2026-08-22 23:07+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.9\n"
-"X-Poedit-Basepath: ../..\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:2,1c\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: .git\n"
 
-#: src/Http/WikidataLocationAssignmentAction.php:37
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:30
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:97
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:178
+msgid "Assign external identifier"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:33
+msgid "Existing external identifiers"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:34
+msgid "Remove"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:38
+msgid "External providers"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:40
+#, php-format
+msgid "Assign %s identifier"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:44
+#, php-format
+msgid "%s search"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:47
+msgid "Choose the external identifier that describes this shared place."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:57
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:58
+msgid "Search Wikidata"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:63
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:72
+msgid "Search nearby"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:71
+#, php-format
+msgid "Search %s"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:74
+msgid "Nearby GOV places"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:74
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:75
+msgid "Place"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:74
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:75
+msgid "Type"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:74
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:78
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:90
+msgid "Distance"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:74
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:75
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:77
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:78
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:95
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:111
+msgid "Assign"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:75
+msgid "GOV search results"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:76
+msgid "No GOV places were found."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:77
+msgid "FactGrid search results"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:77
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:78
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:90
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:106
+msgid "Item"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:78
+msgid "Nearby FactGrid items"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:79
+msgid "No FactGrid items were found."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:83
+msgid "No nearby Wikidata items were found."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:87
+msgid "Nearby Wikidata items"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:88
+#, php-format
+msgid "Candidates within %s km are sorted by name similarity and distance."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:90
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:106
+msgid "Actions"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:94
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:110
+msgid "Open in Wikidata"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\assignment.phtml:102
+msgid "No Wikidata items were found."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\configuration.phtml:21
+msgid ""
+"Choose how far the editor-only nearby search may look around a shared place."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\resources\views\configuration.phtml:27
+msgid "Nearby-search radius (km)"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:38
 msgid "The Wikidata item has been removed."
 msgstr ""
 
-#: src/Http/WikidataLocationAssignmentAction.php:43
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:44
 msgid "Invalid Wikidata identifier."
 msgstr ""
 
-#: src/Http/WikidataLocationAssignmentAction.php:47
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:48
 msgid "The Wikidata item has been assigned."
 msgstr ""
 
-#: src/Http/WikidataLocationAssignmentAction.php:49
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:53
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:63
+msgid "Invalid external identifier."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:57
+msgid "The external identifier has been added."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:57
+msgid ""
+"The external identifier was not added because this provider already has an "
+"identifier."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:65
+msgid "The external identifier has been removed."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:65
+msgid "The external identifier was not found."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentAction.php:67
 msgid "Invalid Wikidata assignment operation."
 msgstr ""
 
-#: src/Http/WikidataLocationAssignmentPage.php:70
-#: src/WikidataPlacesModule.php:89 src/WikidataPlacesModule.php:154
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\Http\WikidataLocationAssignmentPage.php:84
 msgid "Assign Wikidata item"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:76
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:83
 msgid "Several Wikidata identifiers are configured for this shared place."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:88 src/WikidataPlacesModule.php:105
-msgid "Wikidata"
-msgstr ""
-
-#: src/WikidataPlacesModule.php:90 src/WikidataPlacesModule.php:151
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:100
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:174
 msgid "Show in Domus"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:124
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:117
+msgid "Wikidata"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:136
 msgid "House number"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:124
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:136
 msgid "Street"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:124 src/WikidataPlacesModule.php:170
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:136
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:268
 msgid "Until"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:141
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:153
 msgid "Occupants"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:145
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:157
 msgid "Image on Wikimedia Commons"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:148
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:160
 msgid "Wikidata details are currently unavailable."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:217
-msgid "Wikidata Places"
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:227
+msgid "Article in GenWiki"
 msgstr ""
 
-#: src/WikidataPlacesModule.php:222
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:251
+#, php-format
+msgid "Reference to %s"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:252
+msgid "consistent"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:252
+msgid "not present in this shared place"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:315
+msgid "External Places"
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:320
 msgid ""
-"Links shared places to Wikidata and exposes read-only Wikidata data and "
-"Domus links."
+"Links shared places to Wikidata, FactGrid and GOV and displays read-only "
+"external place information."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:244
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:342
 msgid "Nearby search settings have been updated."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:277
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:375
 msgid ""
 "The module retrieves public place information from Wikidata. Editors can "
 "also search Wikidata to assign an item to a shared place."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:279
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:377
 msgid "Wikidata item identifiers and the requested display language."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:280
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:378
 msgid "Search text entered by an editor."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:281
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:379
 msgid ""
 "Coordinates and the configured radius for an editor-requested nearby search."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:282
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:380
 msgid "The server IP address and technical request metadata."
 msgstr ""
 
-#: src/WikidataPlacesModule.php:286
-msgid "Wikidata responses are cached locally to reduce external requests."
-msgstr ""
-
-#: resources/views/assignment.phtml:25
-msgid "Choose the Wikidata item that describes this shared place."
-msgstr ""
-
-#: resources/views/assignment.phtml:31
-msgid "Current Wikidata item"
-msgstr ""
-
-#: resources/views/assignment.phtml:36
-msgid "Wikidata redirects this item to"
-msgstr ""
-
-#: resources/views/assignment.phtml:41
-msgid "Replace with the redirected Wikidata item"
-msgstr ""
-
-#: resources/views/assignment.phtml:47
-msgid "Remove Wikidata item"
-msgstr ""
-
-#: resources/views/assignment.phtml:57 resources/views/assignment.phtml:58
-msgid "Search Wikidata"
-msgstr ""
-
-#: resources/views/assignment.phtml:63
-msgid "Search nearby"
-msgstr ""
-
-#: resources/views/assignment.phtml:69
-msgid "No nearby Wikidata items were found."
-msgstr ""
-
-#: resources/views/assignment.phtml:73
-msgid "Nearby Wikidata items"
-msgstr ""
-
-#: resources/views/assignment.phtml:74
-#, php-format
-msgid "Candidates within %s km are sorted by name similarity and distance."
-msgstr ""
-
-#: resources/views/assignment.phtml:76 resources/views/assignment.phtml:92
-msgid "Item"
-msgstr ""
-
-#: resources/views/assignment.phtml:76
-msgid "Distance"
-msgstr ""
-
-#: resources/views/assignment.phtml:76 resources/views/assignment.phtml:92
-msgid "Actions"
-msgstr ""
-
-#: resources/views/assignment.phtml:80 resources/views/assignment.phtml:96
-msgid "Open in Wikidata"
-msgstr ""
-
-#: resources/views/assignment.phtml:81 resources/views/assignment.phtml:97
-msgid "Assign"
-msgstr ""
-
-#: resources/views/assignment.phtml:88
-msgid "No Wikidata items were found."
-msgstr ""
-
-#: resources/views/configuration.phtml:21
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:388
 msgid ""
-"Choose how far the editor-only nearby search may look around a shared place."
+"The module retrieves public place information from FactGrid when a shared "
+"place has a typed FactGrid identifier."
 msgstr ""
 
-#: resources/views/configuration.phtml:27
-msgid "Nearby-search radius (km)"
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:389
+msgid "FactGrid item identifiers and the requested display language."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:396
+msgid ""
+"The module retrieves public place information from GOV when a shared place "
+"has a typed GOV identifier."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:397
+msgid "GOV identifiers and the requested display language."
+msgstr ""
+
+#: C:\Users\harte\Documents\Codex\webtrees-modules\hh_external_places\src\ExternalPlacesModule.php:400
+msgid "Wikidata responses are cached locally to reduce external requests."
 msgstr ""

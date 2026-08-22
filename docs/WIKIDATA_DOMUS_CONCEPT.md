@@ -1,6 +1,11 @@
-# Konzept – webtrees-Modul Wikidata Places / Domus
+# Konzept – webtrees-Modul External Places / Domus
 
-**Arbeitstitel:** `hh_wikidata_places`  
+> Dieses Dokument beschreibt die ursprüngliche Wikidata-/Domus-Konzeption.
+> Das Modul heißt inzwischen **External Places** und unterstützt zusätzlich
+> FactGrid und GOV über eine gemeinsame providerneutrale Infrastruktur. Die
+> Domus-Integration bleibt Wikidata-spezifisch.
+
+**Arbeitstitel:** `hh_external_places`
 **Stand:** 19.08.2026
 **Zielplattform:** webtrees 2.2.x, zunächst GEDCOM 5.5.1 mit Vesta Shared Places  
 **Abhängigkeit:** Vesta Shared Places für `_LOC`-Datensätze
@@ -275,7 +280,7 @@ Zu klären:
 ## 15. Empfohlene Modulstruktur
 
 ```text
-hh_wikidata_places/
+hh_external_places/
 ├── module.php
 ├── src/
 │   ├── Domain/
@@ -284,7 +289,7 @@ hh_wikidata_places/
 │   ├── Cache/
 │   ├── Domus/
 │   ├── Http/
-│   └── WikidataPlacesModule.php
+│   └── ExternalPlacesModule.php
 ├── resources/
 │   ├── views/
 │   └── lang/

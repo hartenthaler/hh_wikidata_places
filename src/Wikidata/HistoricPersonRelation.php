@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
 /** A public Wikidata relationship between a place and a person or organisation. */
 final class HistoricPersonRelation

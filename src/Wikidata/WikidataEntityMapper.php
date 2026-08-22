@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\WikidataIdentifier;
 
 /** @internal Maps the fixed wbgetentities response subset to a value object. */
 final class WikidataEntityMapper

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
 /**
  * Read-only subset of a Wikidata entity used by the first module release.

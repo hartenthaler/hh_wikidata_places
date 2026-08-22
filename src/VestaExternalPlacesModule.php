@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule;
 
 use Vesta\Hook\HookInterfaces\PrintFunctionsPlaceInterface;
 
@@ -12,6 +12,6 @@ use Vesta\Hook\HookInterfaces\PrintFunctionsPlaceInterface;
  * Keeping this adapter separate lets the base module load safely on systems
  * where Vesta Shared Places is absent or uses an older API.
  */
-final class VestaWikidataPlacesModule extends WikidataPlacesModule implements PrintFunctionsPlaceInterface
+final class VestaExternalPlacesModule extends ExternalPlacesModule implements PrintFunctionsPlaceInterface
 {
 }

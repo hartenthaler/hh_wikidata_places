@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
 /** A nearby Wikidata place candidate, ranked only as a search aid. */
 final class WikidataNearbyCandidate

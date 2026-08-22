@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\WikidataIdentifier;
 use JsonException;
 
 /**
@@ -40,7 +40,7 @@ final class WikidataClient
                 'connect_timeout' => 3.0,
                 'headers'         => [
                     'Accept'     => 'application/json',
-                    'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)',
+                    'User-Agent' => 'webtrees External Places/0.1 (https://github.com/hartenthaler/hh_external_places)',
                 ],
                 'http_errors'     => false,
                 'query'           => [
@@ -93,7 +93,7 @@ final class WikidataClient
             $response = $this->httpClient->request('GET', self::ENDPOINT, [
                 'allow_redirects' => false,
                 'connect_timeout' => 3.0,
-                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees External Places/0.1 (https://github.com/hartenthaler/hh_external_places)'],
                 'http_errors'     => false,
                 'query'           => ['action' => 'wbgetentities', 'format' => 'json', 'formatversion' => '2', 'ids' => implode('|', array_slice($qids, 0, 10)), 'languages' => $language . '|en', 'props' => 'labels'],
                 'timeout'         => 6.0,
@@ -135,7 +135,7 @@ final class WikidataClient
                 $response = $this->httpClient->request('GET', self::ENDPOINT, [
                     'allow_redirects' => false,
                     'connect_timeout' => 3.0,
-                    'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                    'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees External Places/0.1 (https://github.com/hartenthaler/hh_external_places)'],
                     'http_errors'     => false,
                     'query'           => ['action' => 'wbgetentities', 'format' => 'json', 'formatversion' => '2', 'ids' => implode('|', $chunk), 'languages' => $language . '|en', 'props' => 'labels|claims'],
                     'timeout'         => 6.0,
@@ -180,7 +180,7 @@ final class WikidataClient
             $response = $this->httpClient->request('GET', self::ENDPOINT, [
                 'allow_redirects' => false,
                 'connect_timeout' => 3.0,
-                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees External Places/0.1 (https://github.com/hartenthaler/hh_external_places)'],
                 'http_errors'     => false,
                 'query'           => [
                     'action'   => 'wbsearchentities',
@@ -243,7 +243,7 @@ final class WikidataClient
             $response = $this->httpClient->request('GET', self::QUERY_ENDPOINT, [
                 'allow_redirects' => false,
                 'connect_timeout' => 3.0,
-                'headers'         => ['Accept' => 'application/sparql-results+json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                'headers'         => ['Accept' => 'application/sparql-results+json', 'User-Agent' => 'webtrees External Places/0.1 (https://github.com/hartenthaler/hh_external_places)'],
                 'http_errors'     => false,
                 'query'           => ['format' => 'json', 'query' => $query],
                 'timeout'         => 8.0,
@@ -333,7 +333,7 @@ final class WikidataClient
             $response = $this->httpClient->request('GET', self::ENDPOINT, [
                 'allow_redirects' => false,
                 'connect_timeout' => 3.0,
-                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikidata Places/0.1 (https://github.com/hartenthaler/hh_wikidata_places)'],
+                'headers'         => ['Accept' => 'application/json', 'User-Agent' => 'webtrees External Places/0.1 (https://github.com/hartenthaler/hh_external_places)'],
                 'http_errors'     => false,
                 'query'           => [
                     'action' => 'wbgetentities', 'format' => 'json', 'formatversion' => '2',

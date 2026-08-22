@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule;
 
 use Fisharebest\Localization\Translation;
 use Fisharebest\Webtrees\I18N;
@@ -18,14 +18,16 @@ use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
 use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Validator;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheSchema;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Infrastructure\WikidataCacheRepository;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom\ExternalIdService;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domus\DomusMapLinkProvider;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Http\WikidataLocationAssignmentPage;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\WikidataClient;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\NearbyDiscoverySettings;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata\LocationCoordinates;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Infrastructure\WikidataCacheSchema;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Infrastructure\WikidataCacheRepository;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Gedcom\ExternalIdService;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\External\ExternalInformation;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\External\ExternalProviderRegistry;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domus\DomusMapLinkProvider;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Http\WikidataLocationAssignmentPage;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata\WikidataClient;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata\NearbyDiscoverySettings;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata\LocationCoordinates;
 use Vesta\Model\GenericViewElement;
 use Vesta\Model\GovReference;
 use Vesta\Model\LocReference;
@@ -37,12 +39,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use function file_exists;
 use function route;
 
-class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterface, ModuleCustomInterface
+class ExternalPlacesModule extends AbstractModule implements ModuleConfigInterface, ModuleCustomInterface
 {
     use ModuleCustomTrait;
     use ModuleConfigTrait;
 
-    private const MODULE_NAME = 'hh_wikidata_places';
+    private const MODULE_NAME = 'hh_external_places';
     private const GITHUB_USER = 'hartenthaler';
     private const CACHE_SCHEMA_VERSION_PREFERENCE = 'wikidata_cache_schema_version';
 
@@ -58,8 +60,8 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         View::registerNamespace(self::MODULE_NAME, $this->resourcesFolder() . 'views/');
         $router = Registry::routeFactory()->routeMap();
         $router->get(
-            'hh-wikidata-places.assignment-page',
-            '/tree/{tree}/wikidata-place/{xref}/assignment',
+            'hh-external-places.assignment-page',
+            '/tree/{tree}/external-place/{xref}/assignment',
             WikidataLocationAssignmentPage::class,
         )->allows(['GET', 'POST']);
     }
@@ -71,6 +73,11 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
             return null;
         }
 
+        $providerRegistry = new ExternalProviderRegistry();
+        $externalIdentifiers = $providerRegistry->parse($location->gedcom());
+        foreach ($providerRegistry->errors() as $error) {
+            FlashMessages::addMessage(I18N::translate($error), 'danger');
+        }
         $lookup = (new ExternalIdService())->wikidataIdentifiers($location->gedcom());
         if ($lookup->isAmbiguous()) {
             return GenericViewElement::create('<div class="alert alert-warning">' . e(I18N::translate('Several Wikidata identifiers are configured for this shared place.')) . '</div>');
@@ -80,15 +87,20 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         $coordinates = LocationCoordinates::fromGedcom($location->gedcom());
         $domusUrl = (new DomusMapLinkProvider())->url($identifier, $coordinates);
         if ($identifier === null) {
-            if (!$location->canEdit()) {
+            if ($externalIdentifiers === [] && !$location->canEdit()) {
                 return null;
             }
 
-            return GenericViewElement::create(
-                '<br><br><strong>' . e(I18N::translate('Wikidata')) . ':</strong><br>'
-                . '<a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(I18N::translate('Assign Wikidata item')) . '</a>'
-                . '<a class="btn btn-primary btn-sm mt-2 ms-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Show in Domus')) . '</a>'
-            );
+            $html = $this->externalInformationHtml($externalIdentifiers, $language = explode('-', str_replace('_', '-', I18N::languageTag()))[0] ?: 'en', '', $location->fullName());
+            $html .= '<div class="d-flex gap-2 flex-wrap mt-2">';
+            if ($location->canEdit()) {
+                $html .= '<a class="btn btn-primary btn-sm" href="' . e(route('hh-external-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(I18N::translate('Assign external identifier')) . '</a>';
+            }
+            if ($domusUrl !== '') {
+                $html .= '<a class="btn btn-primary btn-sm" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Show in Domus')) . '</a>';
+            }
+            $html .= '</div>';
+            return GenericViewElement::create($html);
         }
 
         $language = explode('-', str_replace('_', '-', I18N::languageTag()))[0] ?: 'en';
@@ -120,7 +132,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
                 }
             }
             $addressLabels = (new WikidataClient())->labels($addressQids, $language);
-            $html .= '<h4 class="mt-3">' . e(MoreI18N::xlate('Addresses')) . '</h4><div class="table-responsive"><table class="table table-sm"><thead><tr>'
+            $html .= '<h5 class="mt-3">' . e(MoreI18N::xlate('Addresses')) . '</h5><div class="table-responsive"><table class="table table-sm"><thead><tr>'
                 . '<th>' . e(I18N::translate('House number')) . '</th><th>' . e(I18N::translate('Street')) . '</th><th>' . e(MoreI18N::xlate('Postal code')) . '</th><th>' . e(MoreI18N::xlate('Place')) . '</th><th>' . e(MoreI18N::xlate('From')) . '</th><th>' . e(I18N::translate('Until')) . '</th></tr></thead><tbody>';
             foreach ($entity->historicAddresses as $address) {
                 $street = $address->streetText ?? ($address->streetQid === null ? '' : ($addressLabels[$address->streetQid] ?? $address->streetQid));
@@ -147,14 +159,100 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         if ($entity === null) {
             $html .= ' — <small>' . e(I18N::translate('Wikidata details are currently unavailable.')) . '</small>';
         }
+        $wikidataProvider = (new ExternalProviderRegistry())->byAuthority('https://www.wikidata.org/entity/');
+        $wikidataReference = $wikidataProvider?->fetch(
+            new \Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\ExternalIdentifier('wikidata', $identifier->qid(), 'https://www.wikidata.org/entity/', $identifier->entityUrl()),
+            $language,
+        );
+        if ($wikidataReference !== null) {
+            $html .= $this->crossReferenceHtml($wikidataReference, $externalIdentifiers);
+        }
         $html .= '<br><small>' . e(MoreI18N::xlate('Source')) . ': Wikidata</small>';
-        $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Show in Domus')) . '</a>';
-
-        if ($location->canEdit()) {
-            $html .= '<br><a class="btn btn-primary btn-sm mt-2" href="' . e(route('hh-wikidata-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(I18N::translate('Assign Wikidata item')) . '</a>';
+        $html .= $this->externalInformationHtml($externalIdentifiers, $language, 'wikidata', $location->fullName());
+        $html .= '<div class="d-flex gap-2 flex-wrap mt-2">';
+        if ($domusUrl !== '') {
+            $html .= '<a class="btn btn-primary btn-sm" href="' . e($domusUrl) . '" rel="noopener noreferrer" target="_blank">' . e(I18N::translate('Show in Domus')) . '</a>';
         }
 
+        if ($location->canEdit()) {
+            $html .= '<a class="btn btn-primary btn-sm" href="' . e(route('hh-external-places.assignment-page', ['tree' => $location->tree()->name(), 'xref' => $location->xref()])) . '">' . e(I18N::translate('Assign external identifier')) . '</a>';
+        }
+        $html .= '</div>';
+
         return GenericViewElement::create($html);
+    }
+
+    /**
+     * Render all non-Wikidata provider data and explicitly report cross-links.
+     * External data remains read-only; adding a missing ID is a separate action.
+     *
+     * @param list<\Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\ExternalIdentifier> $identifiers
+     */
+    private function externalInformationHtml(array $identifiers, string $language, string $skip = '', string $placeName = ''): string
+    {
+        if ($identifiers === []) {
+            return '';
+        }
+
+        $registry = new ExternalProviderRegistry();
+        $html = '';
+        foreach ($registry->all() as $provider) {
+            if ($provider->key() === $skip) {
+                continue;
+            }
+            foreach ($identifiers as $identifier) {
+                if ($identifier->provider !== $provider->key()) {
+                    continue;
+                }
+                $information = $provider->fetch($identifier, $language);
+                $displayLabel = trim(strip_tags($information?->label ?? $identifier->value));
+                if ($provider->key() === 'gov' && ($displayLabel === $identifier->value || $displayLabel === '')) {
+                    $displayLabel = $placeName !== '' ? trim(strip_tags($placeName)) : $identifier->value;
+                }
+                $showIdentifier = $displayLabel !== $identifier->value;
+                $html .= '<section class="mt-3"><strong>' . e($provider->label()) . ':</strong> '
+                    . '<a href="' . e($identifier->url) . '" rel="noopener noreferrer" target="_blank">'
+                    . e($displayLabel) . '</a>' . ($showIdentifier ? ' <small>(' . e($identifier->value) . ')</small>' : '');
+                if ($information?->description !== null) {
+                    $html .= ' — ' . e($information->description);
+                }
+                foreach ($information?->details ?? [] as $detail) {
+                    $html .= '<br><small>' . e($detail['label']) . ': ' . e($detail['value']) . '</small>';
+                }
+                if ($information?->imageUrl !== null) {
+                    $html .= '<br><img src="' . e($information->imageUrl) . '" alt="" loading="lazy" style="max-width:500px;max-height:500px;width:auto;height:auto">';
+                }
+                if ($information !== null) {
+                    foreach ($information->references['genwiki'] ?? [] as $genwikiUrl) {
+                        $html .= '<br><small>' . e(I18N::translate('Article in GenWiki')) . ': <a href="' . e($genwikiUrl) . '" rel="noopener noreferrer" target="_blank">' . e($genwikiUrl) . '</a></small>';
+                    }
+                    $html .= $this->crossReferenceHtml($information, $identifiers);
+                }
+                $html .= '<br><small>' . e(MoreI18N::xlate('Source')) . ': ' . e($provider->label()) . '</small></section>';
+            }
+        }
+        return $html;
+    }
+
+    /** @param list<\Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\ExternalIdentifier> $identifiers */
+    private function crossReferenceHtml(ExternalInformation $information, array $identifiers): string
+    {
+        $html = '';
+        foreach ($information->references as $provider => $values) {
+            if ($provider === 'genwiki') { continue; }
+            foreach ($values as $value) {
+                $matching = false;
+                foreach ($identifiers as $identifier) {
+                    if ($identifier->provider === $provider && $identifier->value === $value) {
+                        $matching = true;
+                        break;
+                    }
+                }
+                $html .= '<br><small>' . e(I18N::translate('Reference to %s', ucfirst($provider))) . ': '
+                    . e($value) . ' — ' . e($matching ? I18N::translate('consistent') : I18N::translate('not present in this shared place')) . '</small>';
+            }
+        }
+        return $html;
     }
 
     /** @param list<object{qid:string,from:?string,until:?string}> $relations @param array<string,object{qid:string,label:?string,birthDate:?string,deathDate:?string}> $people */
@@ -164,7 +262,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
             return '';
         }
 
-        $html = '<h4 class="mt-3">' . e($heading) . '</h4><div class="table-responsive"><table class="table table-sm"><thead><tr>'
+        $html = '<h5 class="mt-3">' . e($heading) . '</h5><div class="table-responsive"><table class="table table-sm"><thead><tr>'
             . '<th>' . e(MoreI18N::xlate('Name')) . '</th>'
             . '<th>' . e(MoreI18N::xlate('Birth')) . '</th><th>' . e(MoreI18N::xlate('Death')) . '</th>'
             . '<th>' . e(MoreI18N::xlate('From')) . '</th><th>' . e(I18N::translate('Until')) . '</th></tr></thead><tbody>';
@@ -214,12 +312,12 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
 
     public function title(): string
     {
-        return I18N::translate('Wikidata Places');
+        return I18N::translate('External Places');
     }
 
     public function description(): string
     {
-        return I18N::translate('Links shared places to Wikidata and exposes read-only Wikidata data and Domus links.');
+        return I18N::translate('Links shared places to Wikidata, FactGrid and GOV and displays read-only external place information.');
     }
 
     public function getAdminAction(): ResponseInterface
@@ -227,7 +325,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
         $this->layout = 'layouts/administration';
 
         return $this->viewResponse(self::MODULE_NAME . '::configuration', [
-            'all_trees' => app(TreeService::class)->all(),
+            'all_trees' => Registry::container()->get(TreeService::class)->all(),
             'default_radius_km' => NearbyDiscoverySettings::DEFAULT_RADIUS_KM,
             'preference' => NearbyDiscoverySettings::PREFERENCE,
             'title' => $this->title(),
@@ -236,7 +334,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
 
     public function postAdminAction(ServerRequestInterface $request): ResponseInterface
     {
-        foreach (app(TreeService::class)->all() as $tree) {
+        foreach (Registry::container()->get(TreeService::class)->all() as $tree) {
             $radius = Validator::parsedBody($request)->string('nearby-radius-' . $tree->id(), (string) NearbyDiscoverySettings::DEFAULT_RADIUS_KM);
             $tree->setPreference(NearbyDiscoverySettings::PREFERENCE, (string) NearbyDiscoverySettings::normalise($radius));
         }
@@ -249,7 +347,7 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
     /**
      * Privacy information consumed opportunistically by hh_legal_notice.
      *
-     * There is intentionally no interface dependency: Wikidata Places must
+     * There is intentionally no interface dependency: External Places must
      * also load on installations that do not use the Legal Notice module.
      *
      * @return array{
@@ -281,6 +379,22 @@ class WikidataPlacesModule extends AbstractModule implements ModuleConfigInterfa
                     I18N::translate('Coordinates and the configured radius for an editor-requested nearby search.'),
                     I18N::translate('The server IP address and technical request metadata.'),
                 ],
+            ], [
+                'service_id'  => 'factgrid',
+                'name'        => 'FactGrid',
+                'url'         => 'https://database.factgrid.de/',
+                'country'     => 'Germany',
+                'privacy_url' => 'https://database.factgrid.de/wiki/FactGrid:Privacy_policy',
+                'description' => I18N::translate('The module retrieves public place information from FactGrid when a shared place has a typed FactGrid identifier.'),
+                'data'        => [I18N::translate('FactGrid item identifiers and the requested display language.')],
+            ], [
+                'service_id'  => 'gov',
+                'name'        => 'GOV',
+                'url'         => 'https://gov.genealogy.net/',
+                'country'     => 'Germany',
+                'privacy_url' => 'https://www.genealogy.net/impressum/',
+                'description' => I18N::translate('The module retrieves public place information from GOV when a shared place has a typed GOV identifier.'),
+                'data'        => [I18N::translate('GOV identifiers and the requested display language.')],
             ]],
             'security_measures' => [
                 I18N::translate('Wikidata responses are cached locally to reduce external requests.'),

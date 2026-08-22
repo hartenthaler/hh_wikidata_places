@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Gedcom;
 
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\WikidataIdentifier;
 
 /**
  * Reads typed external identifiers from a single GEDCOM shared-place record.

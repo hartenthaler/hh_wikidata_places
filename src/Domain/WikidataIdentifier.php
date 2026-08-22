@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain;
 
 /**
  * A canonical Wikidata item identifier and its declared authority.

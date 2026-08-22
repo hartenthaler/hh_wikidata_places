@@ -1,0 +1,139 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikibase;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use JsonException;
+
+/**
+ * Safe common reader for supported Wikibase installations.
+ *
+ * The endpoint is selected by a provider name, never by GEDCOM content.  This
+ * deliberately prevents external identifiers from becoming arbitrary requests.
+ */
+final class ReadOnlyWikibaseClient
+{
+    private const MAX_RESPONSE_BYTES = 1_000_000;
+
+    /** @var array<string,string> */
+    private const ENDPOINTS = [
+        'wikidata' => 'https://www.wikidata.org/w/api.php',
+        'factgrid' => 'https://database.factgrid.de/w/api.php',
+    ];
+
+    public function __construct(private readonly ClientInterface $httpClient = new Client())
+    {
+    }
+
+    /** @return array<string,mixed>|null */
+    public function entity(string $provider, string $itemId, string $language): ?array
+    {
+        $endpoint = self::ENDPOINTS[$provider] ?? null;
+        if ($endpoint === null || preg_match('/^Q[1-9][0-9]*$/', $itemId) !== 1) {
+            return null;
+        }
+
+        $language = $this->language($language);
+        try {
+            $response = $this->httpClient->request('GET', $endpoint, [
+                'allow_redirects' => false,
+                'connect_timeout' => 3.0,
+                'headers'         => [
+                    'Accept'     => 'application/json',
+                    'User-Agent' => 'webtrees Wikibase Places/0.2 (https://github.com/hartenthaler/hh_external_places)',
+                ],
+                'http_errors' => false,
+                'query'       => [
+                    'action'        => 'wbgetentities',
+                    'format'        => 'json',
+                    'formatversion' => '2',
+                    'ids'           => $itemId,
+                    'languages'     => $language . '|en',
+                    'props'         => 'labels|descriptions|claims',
+                ],
+                'timeout' => 6.0,
+            ]);
+        } catch (GuzzleException) {
+            return null;
+        }
+
+        $body = $response->getBody()->getContents();
+        if ($response->getStatusCode() !== 200 || strlen($body) > self::MAX_RESPONSE_BYTES) {
+            return null;
+        }
+
+        try {
+            $payload = json_decode($body, true, 32, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return null;
+        }
+
+        return is_array($payload) ? $payload : null;
+    }
+
+    /** @return list<array{qid:string,label:string,description:?string}> */
+    public function search(string $provider, string $term, string $language): array
+    {
+        $endpoint = self::ENDPOINTS[$provider] ?? null;
+        $term = trim($term);
+        if ($endpoint === null || mb_strlen($term) < 2 || mb_strlen($term) > 120) { return []; }
+        try {
+            $response = $this->httpClient->request('GET', $endpoint, ['query' => ['action' => 'wbsearchentities', 'format' => 'json', 'language' => $this->language($language), 'uselang' => $this->language($language), 'search' => $term, 'limit' => 10, 'type' => 'item'], 'allow_redirects' => false, 'connect_timeout' => 3.0, 'headers' => ['Accept' => 'application/json', 'User-Agent' => 'webtrees Wikibase Places/0.2'], 'http_errors' => false, 'timeout' => 6.0]);
+            $body = $response->getBody()->getContents();
+            if ($response->getStatusCode() !== 200 || strlen($body) > self::MAX_RESPONSE_BYTES) { return []; }
+            $payload = json_decode($body, true, 20, JSON_THROW_ON_ERROR);
+        } catch (GuzzleException|JsonException) { return []; }
+        $results = [];
+        foreach (array_slice($payload['search'] ?? [], 0, 10) as $item) {
+            $qid = $item['id'] ?? null;
+            if (!is_string($qid) || preg_match('/^Q[1-9][0-9]*$/', $qid) !== 1) { continue; }
+            $results[] = ['qid' => $qid, 'label' => is_string($item['label'] ?? null) ? $item['label'] : $qid, 'description' => is_string($item['description'] ?? null) ? $item['description'] : null];
+        }
+        return $results;
+    }
+
+    /** @return list<array{qid:string,label:string,description:?string,distanceKm:float}> */
+    public function nearby(string $provider, float $latitude, float $longitude, float $radiusKm, string $language): array
+    {
+        if ($provider !== 'factgrid' || $latitude < -90 || $latitude > 90 || $longitude < -180 || $longitude > 180) { return []; }
+        $radiusKm = max(0.1, min(100.0, $radiusKm));
+        $center = sprintf('Point(%.6F %.6F)', $longitude, $latitude);
+        $query = 'SELECT ?item ?itemLabel ?itemDescription ?coord WHERE { SERVICE wikibase:around { ?item wdt:P48 ?coord . bd:serviceParam wikibase:center "' . $center . '"^^geo:wktLiteral . bd:serviceParam wikibase:radius "' . number_format($radiusKm, 3, '.', '') . '" . } SERVICE wikibase:label { bd:serviceParam wikibase:language "' . $this->language($language) . ',en". } } LIMIT 20';
+        try {
+            $response = $this->httpClient->request('GET', 'https://database.factgrid.de/query/sparql', ['query' => ['format' => 'json', 'query' => $query], 'allow_redirects' => false, 'connect_timeout' => 3.0, 'headers' => ['Accept' => 'application/sparql-results+json', 'User-Agent' => 'webtrees Wikibase Places/0.2'], 'http_errors' => false, 'timeout' => 8.0]);
+            $body = $response->getBody()->getContents();
+            if ($response->getStatusCode() !== 200 || strlen($body) > self::MAX_RESPONSE_BYTES) { return []; }
+            $payload = json_decode($body, true, 32, JSON_THROW_ON_ERROR);
+        } catch (GuzzleException|JsonException) { return []; }
+        $results = [];
+        foreach (array_slice($payload['results']['bindings'] ?? [], 0, 20) as $binding) {
+            $uri = $binding['item']['value'] ?? null;
+            $coord = $binding['coord']['value'] ?? null;
+            if (!is_string($uri) || !is_string($coord) || preg_match('~/Q([1-9][0-9]*)$~', $uri, $qid) !== 1 || preg_match('/Point\\(([-0-9.]+) ([-0-9.]+)\\)/', $coord, $point) !== 1) { continue; }
+            $distance = $this->distanceKm($latitude, $longitude, (float) $point[2], (float) $point[1]);
+            $results[] = ['qid' => 'Q' . $qid[1], 'label' => (string) ($binding['itemLabel']['value'] ?? ('Q' . $qid[1])), 'description' => isset($binding['itemDescription']['value']) ? (string) $binding['itemDescription']['value'] : null, 'distanceKm' => $distance];
+        }
+        usort($results, static fn (array $a, array $b): int => $a['distanceKm'] <=> $b['distanceKm']);
+        return $results;
+    }
+
+    private function distanceKm(float $lat1, float $lon1, float $lat2, float $lon2): float
+    {
+        $earth = 6371.0;
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+        $a = sin($dLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
+        return $earth * 2 * asin(min(1.0, sqrt($a)));
+    }
+
+    private function language(string $language): string
+    {
+        $language = str_replace('_', '-', trim($language));
+
+        return preg_match('/^([a-z]{2,3})(?:-[A-Za-z]{2,4})?$/', $language, $matches) === 1 ? $matches[1] : 'en';
+    }
+}

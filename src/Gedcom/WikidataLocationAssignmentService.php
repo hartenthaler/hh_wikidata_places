@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Gedcom;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Gedcom;
 
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Location;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\WikidataIdentifier;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\Domain\ExternalIdentifier;
 
 /**
  * Applies an explicit Wikidata assignment to a shared-place record.
@@ -18,7 +19,7 @@ use Hartenthaler\Webtrees\Module\WikidataPlacesModule\Domain\WikidataIdentifier;
  */
 final class WikidataLocationAssignmentService
 {
-    public function __construct(private readonly WikidataExternalIdEditor $editor = new WikidataExternalIdEditor())
+    public function __construct(private readonly WikidataExternalIdEditor $editor = new WikidataExternalIdEditor(), private readonly ExternalIdEditor $externalEditor = new ExternalIdEditor())
     {
     }
 
@@ -46,6 +47,30 @@ final class WikidataLocationAssignmentService
 
         $location->updateRecord($this->withUpdatedChange($this->editor->remove($location->gedcom())), false);
 
+        return true;
+    }
+
+    public function addExternalIdentifier(Location $location, ExternalIdentifier $identifier): bool
+    {
+        if (!$location->canEdit()) {
+            return false;
+        }
+
+        $updated = $this->externalEditor->add($location->gedcom(), $identifier);
+        if ($updated === rtrim($location->gedcom()) . "\n") {
+            return false;
+        }
+        $location->updateRecord($this->withUpdatedChange($updated), false);
+
+        return true;
+    }
+
+    public function removeExternalIdentifier(Location $location, ExternalIdentifier $identifier): bool
+    {
+        if (!$location->canEdit()) { return false; }
+        $updated = $this->externalEditor->remove($location->gedcom(), $identifier);
+        if ($updated === rtrim($location->gedcom()) . "\n") { return false; }
+        $location->updateRecord($this->withUpdatedChange($updated), false);
         return true;
     }
 

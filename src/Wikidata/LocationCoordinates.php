@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule\Wikidata;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule\Wikidata;
 
 /** Extracts a valid GEDCOM MAP/LATI/LONG coordinate pair from a shared place. */
 final class LocationCoordinates

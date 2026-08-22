@@ -4,6 +4,10 @@ All notable user-facing changes are documented here.
 
 ## Next release
 
+- Added shared read-only provider infrastructure for Wikidata, FactGrid and GOV,
+  including cross-reference consistency indicators and explicit entry of missing
+  external identifiers.
+
 - Version 2 will add optional research workflows without automatic GEDCOM changes.
 
 ## 2.2.6.0 - 2026-08-19

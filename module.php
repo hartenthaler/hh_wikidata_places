@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\WikidataPlacesModule;
-use Hartenthaler\Webtrees\Module\WikidataPlacesModule\VestaWikidataPlacesModule;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\ExternalPlacesModule;
+use Hartenthaler\Webtrees\Module\ExternalPlacesModule\VestaExternalPlacesModule;
 
 // webtrees loads custom modules independently.  Register Vesta's classes
 // before loading our class declaration, which implements Vesta's hook API.
@@ -13,11 +13,21 @@ if (is_file($vestaAutoload)) {
 }
 
 require __DIR__ . '/src/MoreI18N.php';
+require __DIR__ . '/src/Domain/ExternalIdentifier.php';
+require __DIR__ . '/src/Domain/FactGridIdentifier.php';
+require __DIR__ . '/src/Wikibase/ReadOnlyWikibaseClient.php';
+require __DIR__ . '/src/External/ExternalInformation.php';
+require __DIR__ . '/src/External/ExternalProviderCache.php';
+require __DIR__ . '/src/External/ExternalProvider.php';
+require __DIR__ . '/src/External/WikibaseProvider.php';
+require __DIR__ . '/src/External/GovProvider.php';
+require __DIR__ . '/src/External/ExternalProviderRegistry.php';
 require __DIR__ . '/src/Domain/WikidataIdentifier.php';
 require __DIR__ . '/src/Domus/DomusLinkProvider.php';
 require __DIR__ . '/src/Domus/DomusMapLinkProvider.php';
 require __DIR__ . '/src/Gedcom/WikidataIdentifierLookup.php';
 require __DIR__ . '/src/Gedcom/ExternalIdService.php';
+require __DIR__ . '/src/Gedcom/ExternalIdEditor.php';
 require __DIR__ . '/src/Gedcom/WikidataExternalIdEditor.php';
 require __DIR__ . '/src/Gedcom/WikidataLocationAssignmentService.php';
 require __DIR__ . '/src/Wikidata/LocationCoordinates.php';
@@ -34,12 +44,12 @@ require __DIR__ . '/src/Wikidata/WikidataSearchResult.php';
 require __DIR__ . '/src/Wikidata/WikidataClient.php';
 require __DIR__ . '/src/Infrastructure/WikidataCacheSchema.php';
 require __DIR__ . '/src/Infrastructure/WikidataCacheRepository.php';
-require __DIR__ . '/src/WikidataPlacesModule.php';
+require __DIR__ . '/src/ExternalPlacesModule.php';
 
 if (interface_exists(\Vesta\Hook\HookInterfaces\PrintFunctionsPlaceInterface::class)) {
-    require __DIR__ . '/src/VestaWikidataPlacesModule.php';
+    require __DIR__ . '/src/VestaExternalPlacesModule.php';
 
-    return new VestaWikidataPlacesModule();
+    return new VestaExternalPlacesModule();
 }
 
-return new WikidataPlacesModule();
+return new ExternalPlacesModule();

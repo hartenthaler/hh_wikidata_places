@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\WikidataPlacesModule;
+namespace Hartenthaler\Webtrees\Module\ExternalPlacesModule;
 
 use Fisharebest\Webtrees\I18N;
 

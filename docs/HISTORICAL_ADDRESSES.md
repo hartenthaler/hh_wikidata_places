@@ -1,6 +1,12 @@
-# Historical addresses
+# Historical addresses from Wikidata
 
-Wikidata Places displays historical addresses as read-only external data. It never writes address data to GEDCOM and never creates an address from the type of a shared place.
+This is a Wikidata-specific enrichment within the provider-neutral **External
+Places** module. FactGrid and GOV use their own provider mappings and are not
+assumed to expose the same address properties.
+
+External Places displays historical addresses as read-only external data. It
+never writes address data to GEDCOM and never creates an address from the type
+of a shared place.
 
 ## When the table is shown
 
